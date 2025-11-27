@@ -488,3 +488,169 @@ body.dark-theme .channel-btn:hover {
 }
 
 /* Остальные стили остаются без изменений */
+
+
+/* Стили для проверки подписки */
+.subscription-screen {
+    text-align: center;
+}
+
+.subscription-icon {
+    font-size: 64px;
+    color: #0088cc;
+    margin-bottom: 20px;
+}
+
+.channels-required {
+    margin: 25px 0;
+}
+
+.channel-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #0088cc;
+    margin-bottom: 15px;
+}
+
+body.dark-theme .channel-card {
+    background: #3d3d3d;
+}
+
+.verification-steps {
+    text-align: left;
+    margin: 25px 0;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+body.dark-theme .verification-steps {
+    background: #3d3d3d;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.step-number {
+    background: #0088cc;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.subscription-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.subscribe-btn, .verify-btn, .tg-subscribe-btn, .tg-retry-btn {
+    padding: 15px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.subscribe-btn, .tg-subscribe-btn {
+    background: #0088cc;
+    color: white;
+}
+
+.subscribe-btn:hover, .tg-subscribe-btn:hover {
+    background: #0077b3;
+    transform: translateY(-2px);
+}
+
+.verify-btn {
+    background: #28a745;
+    color: white;
+}
+
+.verify-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.tg-retry-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.tg-retry-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.subscription-note {
+    margin-top: 15px;
+    opacity: 0.7;
+}
+
+.verification-success {
+    text-align: center;
+    color: #28a745;
+}
+
+.verification-success i {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.telegram-subscription {
+    text-align: center;
+}
+
+.tg-icon {
+    font-size: 64px;
+    color: #0088cc;
+    margin-bottom: 20px;
+}
+
+.tg-channel {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border-left: 4px solid #0088cc;
+}
+
+body.dark-theme .tg-channel {
+    background: #3d3d3d;
+}
+
+.tg-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.loading-spinner i {
+    font-size: 20px;
+}

@@ -53,12 +53,12 @@ class TelegramBot:
             return None
 
 # Инициализация бота (ЗАМЕНИ НА СВОЙ ТОКЕН)
-BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"
+BOT_TOKEN = "5893358037:AAGdvqXX2jxhxz1fcJOGO51BO0QJzCRFvJ0"
 bot = TelegramBot(BOT_TOKEN)
 
 # Список каналов для проверки (ЗАМЕНИ НА СВОИ КАНАЛЫ)
 CHANNELS_TO_CHECK = [
-    {"id": "@SimpleDLX", "name": "Simple dlc"},
+    {"id": "@SimpleDLC", "name": "Simple dlc"},
     {"id": "@telegram", "name": "Telegram News"},
     {"id": "@technews", "name": "Tech News"},
     {"id": "@python", "name": "Python Programming"},

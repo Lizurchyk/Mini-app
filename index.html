@@ -303,7 +303,53 @@
         body.dark .channel-name {
             color: #ecf0f1;
         }
+.btn-check {
+    background: #0088cc;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
 
+.btn-check:hover {
+    background: #0077b3;
+    transform: rotate(180deg);
+}
+
+.channel-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+    border-left: 4px solid #6c757d;
+}
+
+.channel-info {
+    flex: 1;
+}
+
+/* Dark theme adjustments */
+body.dark .channel-item {
+    background: #2c3e50;
+}
+
+body.dark .btn-check {
+    background: #34495e;
+}
+
+body.dark .btn-check:hover {
+    background: #0088cc;
+}
         body.dark .debug-info {
             background: #34495e;
             border-color: #7f8c8d;

@@ -1,266 +1,135 @@
-// Конфигурация
-const CONFIG = {
-    // Список каналов для проверки (username без @)
-    CHANNELS_TO_CHECK: [
-        'SimpleDLC',
-        'telegram',
-        'durov'
-    ],
+// Данные игр
+let gamesData = [];
+
+// ССЫЛКА НА ВАШ JSON ФАЙЛ - ЗАМЕНИТЕ НА СВОЮ!
+const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
+
+// Загрузка данных игр из JSON
+async function loadGames() {
+    const container = document.getElementById('gamesContainer');
     
-    // Задержка между проверками (мс)
-    CHECK_DELAY: 1000
-};
-
-// Глобальные переменные
-let userData = null;
-let subscriptionResults = {};
-
-// Инициализация приложения
-function initializeApp() {
-    console.log('Initializing Telegram Mini App...');
-    
-    // Проверяем доступность Telegram Web App
-    if (window.Telegram && window.Telegram.WebApp) {
-        initTelegramApp();
-    } else {
-        // Ждем загрузку Telegram Web App
-        setTimeout(() => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                initTelegramApp();
-            } else {
-                showError('Telegram Web App не загрузился. Попробуйте обновить страницу.');
-            }
-        }, 1000);
-    }
-}
-
-// Инициализация Telegram Web App
-function initTelegramApp() {
     try {
-        console.log('Telegram Web App found, initializing...');
+        container.innerHTML = '<div class="loading">Загрузка игр...</div>';
         
-        // Инициализируем Telegram Web App
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
+        console.log('Загрузка данных из:', GAMES_JSON_URL);
+        const response = await fetch(GAMES_JSON_URL);
         
-        // Загружаем данные пользователя
-        loadUserData();
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
         
-        // Показываем информацию о пользователе
-        displayUserInfo();
-        
-        // Загружаем список каналов
-        displayChannelsList();
-        
-        // Показываем основной контент
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('userInfo').style.display = 'block';
-        
-        // Автоматически проверяем подписки
-        setTimeout(checkAllSubscriptions, 500);
+        gamesData = await response.json();
+        console.log('Данные успешно загружены:', gamesData);
+        displayGames(gamesData);
         
     } catch (error) {
-        console.error('Error initializing Telegram App:', error);
-        showError('Ошибка инициализации: ' + error.message);
-    }
-}
-
-// Загрузка данных пользователя
-function loadUserData() {
-    const initData = Telegram.WebApp.initDataUnsafe;
-    console.log('Telegram initData:', initData);
-    
-    if (initData && initData.user) {
-        userData = {
-            id: initData.user.id,
-            username: initData.user.username || 'Не указан',
-            firstName: initData.user.first_name || 'Не указано',
-            lastName: initData.user.last_name || 'Не указано',
-            language: initData.user.language_code || 'Не указан',
-            isPremium: initData.user.is_premium || false
-        };
-    } else {
-        userData = {
-            id: 'Не доступен',
-            username: 'Не доступен',
-            firstName: 'Не доступен', 
-            lastName: 'Не указано',
-            language: 'Не доступен',
-            isPremium: false
-        };
-    }
-}
-
-// Отображение информации о пользователе
-function displayUserInfo() {
-    if (!userData) return;
-    
-    document.getElementById('userId').textContent = userData.id;
-    document.getElementById('username').textContent = '@' + userData.username;
-    document.getElementById('firstName').textContent = userData.firstName;
-    document.getElementById('lastName').textContent = userData.lastName;
-    document.getElementById('language').textContent = userData.language;
-    document.getElementById('platform').textContent = Telegram.WebApp.platform;
-}
-
-// Отображение списка каналов
-function displayChannelsList() {
-    const channelsList = document.getElementById('channelsList');
-    
-    channelsList.innerHTML = CONFIG.CHANNELS_TO_CHECK.map(channel => `
-        <div class="channel-item" id="channel-${channel}">
-            <div class="channel-icon">
-                <i class="fab fa-telegram"></i>
+        console.error('Ошибка загрузки:', error);
+        container.innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Ошибка загрузки данных</h3>
+                <p>${error.message}</p>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    Проверьте ссылку на JSON файл
+                </p>
             </div>
-            <div class="channel-info">
-                <div class="channel-name">@${channel}</div>
-                <div class="channel-status" id="status-${channel}">
-                    <i class="fas fa-clock"></i> Ожидание проверки...
+        `;
+    }
+}
+
+// Отображение карточек игр
+function displayGames(games) {
+    const container = document.getElementById('gamesContainer');
+    
+    if (!games || games.length === 0) {
+        container.innerHTML = '<div class="no-results">Игры не найдены</div>';
+        return;
+    }
+
+    container.innerHTML = games.map(game => `
+        <div class="game-card" data-id="${game.id}">
+            <img src="${game.image}" alt="${game.name}" class="game-image" 
+                 onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=250&fit=crop'">
+            <div class="game-info">
+                <h3 class="game-title">${game.name}</h3>
+                <div class="game-description">${formatDescription(game.description)}</div>
+                <div class="game-meta">
+                    <span class="game-version">Версия: ${game.version}</span>
                 </div>
+                <a href="${game.link}" class="game-link" target="_blank">Установить</a>
             </div>
-            <button class="btn-check" onclick="checkSingleChannel('${channel}')">
-                <i class="fas fa-sync-alt"></i>
-            </button>
         </div>
     `).join('');
 }
 
-// Проверка всех подписок
-async function checkAllSubscriptions() {
-    const channels = CONFIG.CHANNELS_TO_CHECK;
-    
-    for (let i = 0; i < channels.length; i++) {
-        const channel = channels[i];
-        await checkChannelSubscription(channel);
-        
-        // Задержка между проверками
-        if (i < channels.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, CONFIG.CHECK_DELAY));
-        }
+// Функция для форматирования описания
+function formatDescription(description) {
+    if (Array.isArray(description)) {
+        return description.join('<br><br>');
     }
+    return description.replace(/\n/g, '<br>');
+}
+
+// Поиск игр
+function searchGames(query) {
+    const searchTerm = query.toLowerCase().trim();
     
-    updateDebugInfo();
+    if (!searchTerm) {
+        displayGames(gamesData);
+        return;
+    }
+
+    const filteredGames = gamesData.filter(game => 
+        game.name.toLowerCase().includes(searchTerm) ||
+        game.description.toLowerCase().includes(searchTerm)
+    );
+
+    displayGames(filteredGames);
 }
 
-// Проверка одного канала
-async function checkSingleChannel(channel) {
-    await checkChannelSubscription(channel);
-    updateDebugInfo();
-}
+// Управление темой
+function setupTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-// Проверка подписки на конкретный канал
-async function checkChannelSubscription(channel) {
-    return new Promise((resolve) => {
-        const statusElement = document.getElementById(`status-${channel}`);
-        const channelElement = document.getElementById(`channel-${channel}`);
-        
-        // Обновляем статус на "Проверка..."
-        statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Проверка...';
-        
-        // Пытаемся использовать Telegram Web App API для проверки подписки
-        if (Telegram.WebApp.checkSubscription) {
-            console.log('Using Telegram.WebApp.checkSubscription for channel:', channel);
-            
-            const checkButton = {
-                type: 'check_subscription',
-                subscription_id: channel,
-                payload: JSON.stringify({ user_id: userData.id })
-            };
-            
-            Telegram.WebApp.checkSubscription(checkButton, (result) => {
-                console.log('Subscription check result for', channel, ':', result);
-                
-                const isSubscribed = result === true;
-                subscriptionResults[channel] = isSubscribed;
-                
-                updateChannelStatus(channel, isSubscribed, 'Telegram API');
-                resolve(isSubscribed);
-            });
-            
+    // Загрузка сохраненной темы
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+
+    // Переключение темы
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
         } else {
-            console.log('Telegram.WebApp.checkSubscription not available, using fallback');
-            // Fallback метод - всегда показывает подписан для демонстрации
-            setTimeout(() => {
-                const isSubscribed = true; // Для демо всегда true
-                subscriptionResults[channel] = isSubscribed;
-                
-                updateChannelStatus(channel, isSubscribed, 'Fallback');
-                resolve(isSubscribed);
-            }, 1500);
+            body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
         }
     });
 }
 
-// Обновление статуса канала
-function updateChannelStatus(channel, isSubscribed, method) {
-    const statusElement = document.getElementById(`status-${channel}`);
-    const channelElement = document.getElementById(`channel-${channel}`);
-    
-    if (isSubscribed) {
-        statusElement.innerHTML = `<i class="fas fa-check"></i> <span class="status-subscribed">Подписан (${method})</span>`;
-        channelElement.style.borderLeft = '4px solid #28a745';
-    } else {
-        statusElement.innerHTML = `<i class="fas fa-times"></i> <span class="status-not-subscribed">Не подписан (${method})</span>`;
-        channelElement.style.borderLeft = '4px solid #dc3545';
-    }
-}
+// Инициализация
+document.addEventListener('DOMContentLoaded', function() {
+    setupTheme();
+    loadGames();
 
-// Обновление отладочной информации
-function updateDebugInfo() {
-    const debugData = {
-        userData: userData,
-        subscriptionResults: subscriptionResults,
-        telegramWebApp: {
-            platform: Telegram.WebApp.platform,
-            version: Telegram.WebApp.version,
-            colorScheme: Telegram.WebApp.colorScheme,
-            initData: Telegram.WebApp.initData ? 'Available' : 'Not available',
-            initDataUnsafe: Telegram.WebApp.initDataUnsafe ? 'Available' : 'Not available'
-        },
-        availableMethods: {
-            checkSubscription: typeof Telegram.WebApp.checkSubscription === 'function',
-            openTelegramLink: typeof Telegram.WebApp.openTelegramLink === 'function',
-            showPopup: typeof Telegram.WebApp.showPopup === 'function'
+    // Поиск
+    const searchInput = document.getElementById('searchInput');
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchGames(this.value);
+        }, 300);
+    });
+
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchGames(this.value);
         }
-    };
-    
-    document.getElementById('debugData').textContent = JSON.stringify(debugData, null, 2);
-}
-
-// Показать/скрыть debug информацию
-function toggleDebug() {
-    const debugInfo = document.getElementById('debugInfo');
-    debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
-}
-
-// Обновление данных
-function refreshData() {
-    location.reload();
-}
-
-// Показать ошибку
-function showError(message) {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('error').style.display = 'block';
-    document.getElementById('errorMessage').textContent = message;
-}
-
-// Открыть канал в Telegram
-function openChannel(channel) {
-    if (Telegram.WebApp.openTelegramLink) {
-        Telegram.WebApp.openTelegramLink(`https://t.me/${channel}`);
-    } else {
-        window.open(`https://t.me/${channel}`, '_blank');
-    }
-}
-
-// Инициализация при загрузке
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-// Глобальные функции
-window.refreshData = refreshData;
-window.toggleDebug = toggleDebug;
-window.checkAllSubscriptions = checkAllSubscriptions;
-window.checkSingleChannel = checkSingleChannel;
-window.openChannel = openChannel;
+    });
+});

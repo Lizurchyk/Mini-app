@@ -3,66 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimpleDLC - Каталог игр</title>
-    <link rel="stylesheet" href="style.css">
+    <title>User Info - Telegram Mini App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .user-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #0088cc;
+        }
+
+        .user-card h2 {
+            color: #0088cc;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .channels-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .channels-section h2 {
+            color: #0088cc;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .channels-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .channel-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s ease;
+        }
+
+        .channel-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .channel-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #0088cc, #00a2ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .channel-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .status-subscribed {
+            color: #28a745;
+        }
+
+        .status-not-subscribed {
+            color: #dc3545;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #0088cc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0077b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .debug-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .debug-info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #0088cc;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .user-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        /* Dark theme support */
+        body.dark {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+        }
+
+        body.dark .container {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        body.dark .user-card,
+        body.dark .channels-section {
+            background: #34495e;
+        }
+
+        body.dark .info-item,
+        body.dark .channel-item {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        body.dark .info-label {
+            color: #bdc3c7;
+        }
+
+        body.dark .info-value {
+            color: #ecf0f1;
+        }
+
+        body.dark .channel-name {
+            color: #ecf0f1;
+        }
+
+        body.dark .debug-info {
+            background: #34495e;
+            border-color: #7f8c8d;
+            color: #ecf0f1;
+        }
+    </style>
 </head>
 <body>
-    <!-- Экран проверки подписки -->
-    <div id="subscriptionCheck" class="subscription-check">
-        <div class="check-container">
-            <div class="check-icon">
-                <i class="fab fa-telegram"></i>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fab fa-telegram"></i> Telegram User Info</h1>
+            <p>Получение ID пользователя и информации о подписках</p>
+        </div>
+
+        <div class="content">
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Загрузка данных пользователя...</p>
             </div>
-            <h2>Проверка подписки</h2>
-            <p>Для доступа к контенту необходимо быть подписанным на наш Telegram канал</p>
-            <div class="channel-info">
-                <strong>Канал: @SimpleDLC</strong>
+
+            <div id="userInfo" style="display: none;">
+                <div class="user-card">
+                    <h2><i class="fas fa-user"></i> Информация о пользователе</h2>
+                    <div class="user-info">
+                        <div class="info-item">
+                            <div class="info-label">User ID</div>
+                            <div class="info-value" id="userId">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Username</div>
+                            <div class="info-value" id="username">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Имя</div>
+                            <div class="info-value" id="firstName">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Фамилия</div>
+                            <div class="info-value" id="lastName">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Язык</div>
+                            <div class="info-value" id="language">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Платформа</div>
+                            <div class="info-value" id="platform">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="channels-section">
+                    <h2><i class="fas fa-list"></i> Проверка подписок</h2>
+                    <div class="channels-list" id="channelsList">
+                        <!-- Список каналов будет здесь -->
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Обновить данные
+                    </button>
+                    <button class="btn btn-secondary" onclick="toggleDebug()">
+                        <i class="fas fa-code"></i> Показать debug
+                    </button>
+                    <button class="btn btn-success" onclick="checkAllSubscriptions()">
+                        <i class="fas fa-check-double"></i> Проверить все подписки
+                    </button>
+                </div>
+
+                <div id="debugInfo" class="debug-info" style="display: none;">
+                    <h3>Debug Information</h3>
+                    <pre id="debugData"></pre>
+                </div>
             </div>
-            <div class="check-buttons">
-                <button id="checkSubscription" class="check-btn">
-                    <i class="fas fa-sync-alt"></i>
-                    Проверить подписку
+
+            <div id="error" class="error" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Ошибка</h3>
+                <p id="errorMessage"></p>
+                <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 15px;">
+                    <i class="fas fa-redo"></i> Перезагрузить
                 </button>
-                <a href="https://t.me/SimpleDLC" target="_blank" class="channel-btn">
-                    <i class="fab fa-telegram"></i>
-                    Перейти в канал
-                </a>
             </div>
-            <div id="checkResult" class="check-result"></div>
         </div>
     </div>
 
-    <!-- Основной контент (скрыт до проверки) -->
-    <div id="mainContent" class="main-content hidden">
-        <header class="header">
-            <div class="logo">
-                <h1 class="logo-text">SimpleDLC</h1>
-            </div>
-            <div class="theme-switcher">
-                <span class="theme-label">Тема</span>
-                <label class="switch">
-                    <input type="checkbox" id="themeToggle">
-                    <span class="slider"></span> 
-                </label>
-            </div>
-        </header>
-
-        <section class="search-section">
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
-            </div>      
-        </section>
-
-        <main class="main-content-inner">
-            <div class="games-container" id="gamesContainer">
-                <div class="loading">Загрузка игр...</div>
-            </div>
-        </main>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="script.js"></script>
+    <script src="script/script.js"></script>
 </body>
 </html>

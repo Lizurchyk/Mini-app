@@ -4,8 +4,7 @@ const CONFIG = {
     CHANNELS_TO_CHECK: [
         'SimpleDLC',
         'telegram',
-        'durov',
-        'tginfo'
+        'durov'
     ],
     
     // Задержка между проверками (мс)
@@ -17,19 +16,35 @@ let userData = null;
 let subscriptionResults = {};
 
 // Инициализация приложения
-async function initializeApp() {
-    try {
-        // Проверяем, что мы в Telegram Web App
-        if (typeof Telegram === 'undefined' || !Telegram.WebApp) {
-            throw new Error('Это приложение работает только внутри Telegram');
-        }
+function initializeApp() {
+    console.log('Initializing Telegram Mini App...');
+    
+    // Проверяем доступность Telegram Web App
+    if (window.Telegram && window.Telegram.WebApp) {
+        initTelegramApp();
+    } else {
+        // Ждем загрузку Telegram Web App
+        setTimeout(() => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                initTelegramApp();
+            } else {
+                showError('Telegram Web App не загрузился. Попробуйте обновить страницу.');
+            }
+        }, 1000);
+    }
+}
 
+// Инициализация Telegram Web App
+function initTelegramApp() {
+    try {
+        console.log('Telegram Web App found, initializing...');
+        
         // Инициализируем Telegram Web App
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
         
         // Загружаем данные пользователя
-        await loadUserData();
+        loadUserData();
         
         // Показываем информацию о пользователе
         displayUserInfo();
@@ -45,37 +60,35 @@ async function initializeApp() {
         setTimeout(checkAllSubscriptions, 500);
         
     } catch (error) {
-        showError(error.message);
+        console.error('Error initializing Telegram App:', error);
+        showError('Ошибка инициализации: ' + error.message);
     }
 }
 
 // Загрузка данных пользователя
 function loadUserData() {
-    return new Promise((resolve) => {
-        const initData = Telegram.WebApp.initDataUnsafe;
-        
-        if (initData.user) {
-            userData = {
-                id: initData.user.id,
-                username: initData.user.username || 'Не указан',
-                firstName: initData.user.first_name || 'Не указано',
-                lastName: initData.user.last_name || 'Не указано',
-                language: initData.user.language_code || 'Не указан',
-                isPremium: initData.user.is_premium || false
-            };
-        } else {
-            userData = {
-                id: 'Не доступен',
-                username: 'Не доступен',
-                firstName: 'Не доступен',
-                lastName: 'Не доступен',
-                language: 'Не доступен',
-                isPremium: false
-            };
-        }
-        
-        resolve();
-    });
+    const initData = Telegram.WebApp.initDataUnsafe;
+    console.log('Telegram initData:', initData);
+    
+    if (initData && initData.user) {
+        userData = {
+            id: initData.user.id,
+            username: initData.user.username || 'Не указан',
+            firstName: initData.user.first_name || 'Не указано',
+            lastName: initData.user.last_name || 'Не указано',
+            language: initData.user.language_code || 'Не указан',
+            isPremium: initData.user.is_premium || false
+        };
+    } else {
+        userData = {
+            id: 'Не доступен',
+            username: 'Не доступен',
+            firstName: 'Не доступен', 
+            lastName: 'Не указано',
+            language: 'Не доступен',
+            isPremium: false
+        };
+    }
 }
 
 // Отображение информации о пользователе
@@ -83,7 +96,7 @@ function displayUserInfo() {
     if (!userData) return;
     
     document.getElementById('userId').textContent = userData.id;
-    document.getElementById('username').textContent = userData.username;
+    document.getElementById('username').textContent = '@' + userData.username;
     document.getElementById('firstName').textContent = userData.firstName;
     document.getElementById('lastName').textContent = userData.lastName;
     document.getElementById('language').textContent = userData.language;
@@ -105,6 +118,9 @@ function displayChannelsList() {
                     <i class="fas fa-clock"></i> Ожидание проверки...
                 </div>
             </div>
+            <button class="btn-check" onclick="checkSingleChannel('${channel}')">
+                <i class="fas fa-sync-alt"></i>
+            </button>
         </div>
     `).join('');
 }
@@ -126,6 +142,12 @@ async function checkAllSubscriptions() {
     updateDebugInfo();
 }
 
+// Проверка одного канала
+async function checkSingleChannel(channel) {
+    await checkChannelSubscription(channel);
+    updateDebugInfo();
+}
+
 // Проверка подписки на конкретный канал
 async function checkChannelSubscription(channel) {
     return new Promise((resolve) => {
@@ -135,8 +157,10 @@ async function checkChannelSubscription(channel) {
         // Обновляем статус на "Проверка..."
         statusElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Проверка...';
         
-        // Используем Telegram Web App API для проверки подписки
+        // Пытаемся использовать Telegram Web App API для проверки подписки
         if (Telegram.WebApp.checkSubscription) {
+            console.log('Using Telegram.WebApp.checkSubscription for channel:', channel);
+            
             const checkButton = {
                 type: 'check_subscription',
                 subscription_id: channel,
@@ -144,40 +168,41 @@ async function checkChannelSubscription(channel) {
             };
             
             Telegram.WebApp.checkSubscription(checkButton, (result) => {
-                const isSubscribed = result === true;
+                console.log('Subscription check result for', channel, ':', result);
                 
+                const isSubscribed = result === true;
                 subscriptionResults[channel] = isSubscribed;
                 
-                // Обновляем отображение
-                if (isSubscribed) {
-                    statusElement.innerHTML = '<i class="fas fa-check"></i> <span class="status-subscribed">Подписан</span>';
-                    channelElement.style.borderLeft = '4px solid #28a745';
-                } else {
-                    statusElement.innerHTML = '<i class="fas fa-times"></i> <span class="status-not-subscribed">Не подписан</span>';
-                    channelElement.style.borderLeft = '4px solid #dc3545';
-                }
-                
+                updateChannelStatus(channel, isSubscribed, 'Telegram API');
                 resolve(isSubscribed);
             });
+            
         } else {
-            // Если метод не доступен, используем альтернативную проверку
+            console.log('Telegram.WebApp.checkSubscription not available, using fallback');
+            // Fallback метод - всегда показывает подписан для демонстрации
             setTimeout(() => {
-                const isSubscribed = Math.random() > 0.5; // Случайный результат для демо
-                
+                const isSubscribed = true; // Для демо всегда true
                 subscriptionResults[channel] = isSubscribed;
                 
-                if (isSubscribed) {
-                    statusElement.innerHTML = '<i class="fas fa-check"></i> <span class="status-subscribed">Подписан (демо)</span>';
-                    channelElement.style.borderLeft = '4px solid #28a745';
-                } else {
-                    statusElement.innerHTML = '<i class="fas fa-times"></i> <span class="status-not-subscribed">Не подписан (демо)</span>';
-                    channelElement.style.borderLeft = '4px solid #dc3545';
-                }
-                
+                updateChannelStatus(channel, isSubscribed, 'Fallback');
                 resolve(isSubscribed);
-            }, 1000);
+            }, 1500);
         }
     });
+}
+
+// Обновление статуса канала
+function updateChannelStatus(channel, isSubscribed, method) {
+    const statusElement = document.getElementById(`status-${channel}`);
+    const channelElement = document.getElementById(`channel-${channel}`);
+    
+    if (isSubscribed) {
+        statusElement.innerHTML = `<i class="fas fa-check"></i> <span class="status-subscribed">Подписан (${method})</span>`;
+        channelElement.style.borderLeft = '4px solid #28a745';
+    } else {
+        statusElement.innerHTML = `<i class="fas fa-times"></i> <span class="status-not-subscribed">Не подписан (${method})</span>`;
+        channelElement.style.borderLeft = '4px solid #dc3545';
+    }
 }
 
 // Обновление отладочной информации
@@ -189,8 +214,13 @@ function updateDebugInfo() {
             platform: Telegram.WebApp.platform,
             version: Telegram.WebApp.version,
             colorScheme: Telegram.WebApp.colorScheme,
-            initData: Telegram.WebApp.initData,
-            initDataUnsafe: Telegram.WebApp.initDataUnsafe
+            initData: Telegram.WebApp.initData ? 'Available' : 'Not available',
+            initDataUnsafe: Telegram.WebApp.initDataUnsafe ? 'Available' : 'Not available'
+        },
+        availableMethods: {
+            checkSubscription: typeof Telegram.WebApp.checkSubscription === 'function',
+            openTelegramLink: typeof Telegram.WebApp.openTelegramLink === 'function',
+            showPopup: typeof Telegram.WebApp.showPopup === 'function'
         }
     };
     
@@ -216,16 +246,21 @@ function showError(message) {
     document.getElementById('errorMessage').textContent = message;
 }
 
-// Тoggle dark theme (для тестирования)
-function toggleDarkTheme() {
-    document.body.classList.toggle('dark');
+// Открыть канал в Telegram
+function openChannel(channel) {
+    if (Telegram.WebApp.openTelegramLink) {
+        Telegram.WebApp.openTelegramLink(`https://t.me/${channel}`);
+    } else {
+        window.open(`https://t.me/${channel}`, '_blank');
+    }
 }
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', initializeApp);
 
-// Глобальные функции для кнопок
+// Глобальные функции
 window.refreshData = refreshData;
 window.toggleDebug = toggleDebug;
 window.checkAllSubscriptions = checkAllSubscriptions;
-window.toggleDarkTheme = toggleDarkTheme;
+window.checkSingleChannel = checkSingleChannel;
+window.openChannel = openChannel;

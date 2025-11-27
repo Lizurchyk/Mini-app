@@ -2,7 +2,7 @@
 let gamesData = [];
 
 // ССЫЛКА НА ВАШ JSON ФАЙЛ - ЗАМЕНИТЕ НА СВОЮ!
-const GAMES_JSON_URL = 'https://paste.tc/raw/UNMtUkzj'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
+const GAMES_JSON_URL = 'https://paste.tc/raw/DDce5tJr'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
 
 // Загрузка данных игр из JSON
 async function loadGames() {

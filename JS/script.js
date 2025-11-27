@@ -1,29 +1,28 @@
 // Данные игр
 let gamesData = [];
 
+// ПРЯМАЯ ССЫЛКА на ваш games.json файл
+const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json'; // ЗАМЕНИТЕ НА ВАШУ ССЫЛКУ
+
 // Загрузка данных игр из JSON файла
-function loadGames() {
-    // Создаем XMLHttpRequest для обхода CORS
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'games.json', true);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                try {
-                    gamesData = JSON.parse(xhr.responseText);
-                    console.log('Данные загружены из games.json:', gamesData);
-                    displayGames(gamesData);
-                } catch (e) {
-                    console.error('Ошибка парсинга JSON:', e);
-                    showError('Ошибка в формате games.json');
-                }
-            } else {
-                console.error('Ошибка загрузки games.json:', xhr.status);
-                showError('Файл games.json не найден или недоступен');
-            }
+async function loadGames() {
+    try {
+        console.log('Загрузка данных из:', GAMES_JSON_URL);
+        
+        const response = await fetch(GAMES_JSON_URL);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-    };
-    xhr.send();
+        
+        gamesData = await response.json();
+        console.log('Данные успешно загружены:', gamesData);
+        displayGames(gamesData);
+        
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        showError(`Не удалось загрузить данные: ${error.message}`);
+    }
 }
 
 // Показать ошибку
@@ -31,9 +30,12 @@ function showError(message) {
     const container = document.getElementById('gamesContainer');
     container.innerHTML = `
         <div class="no-results">
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-            <h3>${message}</h3>
-            <p>Убедитесь, что файл games.json находится в той же папке</p>
+            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px; color: #ff6b6b;"></i>
+            <h3>Ошибка загрузки</h3>
+            <p>${message}</p>
+            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+                Проверьте ссылку: ${GAMES_JSON_URL}
+            </p>
         </div>
     `;
 }
@@ -43,7 +45,7 @@ function displayGames(games) {
     const container = document.getElementById('gamesContainer');
     
     if (!games || games.length === 0) {
-        container.innerHTML = '<div class="no-results">Игры не найдены в games.json</div>';
+        container.innerHTML = '<div class="no-results">Нет доступных игр</div>';
         return;
     }
 
@@ -109,7 +111,7 @@ function setupTheme() {
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', function() {
     setupTheme();
-    loadGames(); // Загружаем данные из games.json
+    loadGames();
 
     // Поиск при вводе
     const searchInput = document.getElementById('searchInput');

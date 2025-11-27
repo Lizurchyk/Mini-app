@@ -2,7 +2,7 @@
 let gamesData = [];
 
 // ССЫЛКА НА ВАШ JSON ФАЙЛ - ЗАМЕНИТЕ НА СВОЮ!
-const GAMES_JSON_URL = 'https://paste.tc/raw/UNMtUkzj'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
+const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
 
 // Загрузка данных игр из JSON
 async function loadGames() {

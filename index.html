@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои подписки</title>
+    <title>Проверка подписок</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -35,6 +35,26 @@
             font-weight: 600;
         }
         
+        .stats {
+            background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--tg-theme-button-color, #0088cc);
+        }
+        
+        .stats-text {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #999999);
+            margin-top: 4px;
+        }
+        
         .loading {
             text-align: center;
             padding: 40px 0;
@@ -54,11 +74,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            transition: transform 0.2s ease;
-        }
-        
-        .channel-card:active {
-            transform: scale(0.98);
         }
         
         .channel-avatar {
@@ -84,37 +99,31 @@
             margin-bottom: 4px;
         }
         
-        .channel-subscribers {
+        .channel-username {
             font-size: 14px;
             color: var(--tg-theme-hint-color, #999999);
         }
         
-        .channel-status {
-            padding: 4px 8px;
-            border-radius: 6px;
+        .subscription-status {
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
         }
         
-        .status-public {
+        .status-subscribed {
             background: rgba(0, 200, 83, 0.1);
             color: #00c853;
         }
         
-        .status-private {
+        .status-not-subscribed {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        
+        .status-error {
             background: rgba(255, 152, 0, 0.1);
             color: #ff9800;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--tg-theme-hint-color, #999999);
-        }
-        
-        .empty-state h3 {
-            margin-bottom: 8px;
-            font-size: 18px;
         }
         
         .error-message {
@@ -143,12 +152,19 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Мои подписки</h1>
+            <h1>Проверка подписок</h1>
+        </div>
+        
+        <div id="stats" style="display: none;">
+            <div class="stats">
+                <div class="stats-number" id="subscribedCount">0</div>
+                <div class="stats-text">из <span id="totalCount">0</span> каналов</div>
+            </div>
         </div>
         
         <div id="content">
             <div class="loading" id="loading">
-                Загрузка подписок...
+                Проверяем ваши подписки...
             </div>
         </div>
     </div>

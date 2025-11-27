@@ -1,5 +1,5 @@
 // URL к вашему buttons.json на GitHub
-const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/buttons.json';
+const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/main/buttons.json';
 
 // Тексты для отображения при нажатии на кнопки
 const buttonTexts = [

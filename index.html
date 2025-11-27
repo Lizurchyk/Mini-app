@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Шапка сайта -->
     <header class="header">
         <div class="logo">
             <h1 class="logo-text">SimpleDLC</h1>
@@ -22,32 +21,19 @@
         </div>
     </header>
 
-    <!-- Поисковая система -->
     <section class="search-section">
         <div class="search-container">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Поиск игр, DLC и дополнений..." id="searchInput"> 
+            <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
         </div>      
     </section>
 
-    <!-- Основной контент -->
     <main class="main-content">
-        <section class="welcome-section">
-            <h2 class="welcome-title">Каталог игр и модификаций</h2>
-            <p class="welcome-text">
-                Находите лучшие игры, DLC и модификации для ваших любимых проектов
-            </p>
-        </section>
-
-        <!-- Контейнер для карточек игр -->
         <div class="games-container" id="gamesContainer">
-            <!-- Карточки будут загружаться через JavaScript -->
+            <div class="loading">Загрузка игр...</div>
         </div>
     </main>
 
-    <!-- Разделительная линия -->
-    <hr class="divider">
-
-    <script src="JS/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

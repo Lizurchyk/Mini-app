@@ -3,84 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Изменение файла на GitHub</title>
+    <title>SimpleDLC - Каталог игр</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>Изменение файла buttons.json на GitHub</h1>
-    
-    <div>
-        <label for="token">GitHub Personal Access Token:</label>
-        <input type="password" id="token" placeholder="Введите ваш токен">
-    </div>
-    
-    <div>
-        <label for="repo">Репозиторий (владелец/репозиторий):</label>
-        <input type="text" id="repo" placeholder="username/repository">
-    </div>
-    
-    <div>
-        <label for="content">Содержимое файла:</label>
-        <textarea id="content" rows="10" cols="50" placeholder='{"button": "новые данные"}'></textarea>
-    </div>
-    
-    <button onclick="updateFile()">Обновить файл на GitHub</button>
-    
-    <div id="result"></div>
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="logo">
+            <h1 class="logo-text">SimpleDLC</h1>
+        </div>
+        <div class="theme-switcher">
+            <span class="theme-label">Тема</span>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span> 
+            </label>
+        </div>
+    </header>
 
-    <script>
-        async function updateFile() {
-            const token = document.getElementById('token').value;
-            const repo = document.getElementById('repo').value;
-            const content = document.getElementById('content').value;
-            const resultDiv = document.getElementById('result');
-            
-            if (!token || !repo || !content) {
-                resultDiv.innerHTML = '<p style="color: red;">Заполните все поля!</p>';
-                return;
-            }
-            
-            try {
-                // Сначала получаем информацию о текущем файле
-                const getResponse = await fetch(`https://api.github.com/repos/${repo}/contents/buttons.json`, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                
-                if (!getResponse.ok) {
-                    throw new Error('Файл не найден или нет доступа');
-                }
-                
-                const fileData = await getResponse.json();
-                const sha = fileData.sha;
-                
-                // Обновляем файл
-                const updateResponse = await fetch(`https://api.github.com/repos/${repo}/contents/buttons.json`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Обновление buttons.json через веб-интерфейс',
-                        content: btoa(unescape(encodeURIComponent(content))),
-                        sha: sha
-                    })
-                });
-                
-                if (updateResponse.ok) {
-                    resultDiv.innerHTML = '<p style="color: green;">Файл успешно обновлен!</p>';
-                } else {
-                    const error = await updateResponse.json();
-                    throw new Error(error.message);
-                }
-                
-            } catch (error) {
-                resultDiv.innerHTML = `<p style="color: red;">Ошибка: ${error.message}</p>`;
-            }
-        }
-    </script>
+    <!-- Поисковая система -->
+    <section class="search-section">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Поиск игр, DLC и дополнений..." id="searchInput"> 
+        </div>      
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <section class="welcome-section">
+            <h2 class="welcome-title">Каталог игр и модификаций</h2>
+            <p class="welcome-text">
+                Находите лучшие игры, DLC и модификации для ваших любимых проектов
+            </p>
+        </section>
+
+        <!-- Контейнер для карточек игр -->
+        <div class="games-container" id="gamesContainer">
+            <!-- Карточки будут загружаться через JavaScript -->
+        </div>
+    </main>
+
+    <!-- Разделительная линия -->
+    <hr class="divider">
+
+    <script src="script.js"></script>
 </body>
 </html>

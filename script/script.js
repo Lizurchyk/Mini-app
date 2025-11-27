@@ -4,10 +4,8 @@ let gamesData = [];
 // ССЫЛКА НА ВАШ JSON ФАЙЛ
 const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json';
 
-// ID ваших Telegram каналов
-const REQUIRED_CHANNELS = [
-    '@SimpleDLC'
-];
+// ID вашего канала (без @)
+const TELEGRAM_CHANNEL = 'SimpleDLC';
 
 // Элементы DOM
 let subscriptionCheck, mainContent, checkResult;
@@ -23,31 +21,65 @@ async function initializeApp() {
     mainContent = document.getElementById('mainContent');
     checkResult = document.getElementById('checkResult');
     
-    // Проверяем, запущено ли в Telegram
-    if (window.Telegram && window.Telegram.WebApp) {
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-        
-        // Используем метод Telegram Mini Apps для проверки подписки
-        await checkSubscriptionWithTelegram();
+    // Проверяем, запущено ли в Telegram Mini App
+    if (isTelegramWebApp()) {
+        await initializeTelegramApp();
     } else {
-        // Если не в Telegram, используем fallback проверку
-        await checkSubscriptionFallback();
+        showNotInTelegramError();
     }
 }
 
-// Проверка подписки через Telegram Mini Apps
-async function checkSubscriptionWithTelegram() {
+// Проверка что это Telegram Web App
+function isTelegramWebApp() {
+    return window.Telegram && window.Telegram.WebApp;
+}
+
+// Инициализация Telegram App
+async function initializeTelegramApp() {
     try {
-        showLoading('Проверка подписки...');
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
         
+        // Показываем информацию о пользователе
+        showUserInfo();
+        
+        // Начинаем проверку подписки
+        await checkSubscription();
+        
+    } catch (error) {
+        console.error('Ошибка инициализации Telegram App:', error);
+        showCheckResult('error', 'Ошибка инициализации приложения');
+    }
+}
+
+// Показать информацию о пользователе
+function showUserInfo() {
+    const user = Telegram.WebApp.initDataUnsafe.user;
+    if (user) {
+        console.log('User ID:', user.id);
+        console.log('Username:', user.username);
+        console.log('First Name:', user.first_name);
+        
+        // Можно показать приветствие
+        const welcomeElement = document.getElementById('welcomeMessage');
+        if (welcomeElement) {
+            welcomeElement.textContent = `Привет, ${user.first_name || 'друг'}!`;
+        }
+    }
+}
+
+// Проверка подписки
+async function checkSubscription() {
+    showLoading('Проверяем подписку...');
+    
+    try {
         const user = Telegram.WebApp.initDataUnsafe.user;
         if (!user) {
             throw new Error('Не удалось получить данные пользователя');
         }
         
-        // Пытаемся использовать Telegram Mini Apps API для проверки
-        const isSubscribed = await checkViaTelegramMiniApps();
+        // Используем метод Telegram Web App для проверки подписки
+        const isSubscribed = await checkTelegramSubscription(user.id);
         
         if (isSubscribed) {
             showMainContent();
@@ -56,136 +88,138 @@ async function checkSubscriptionWithTelegram() {
         }
         
     } catch (error) {
-        console.error('Ошибка проверки через Telegram:', error);
-        // Fallback на обычную проверку
-        await checkSubscriptionFallback();
+        console.error('Ошибка проверки подписки:', error);
+        showCheckResult('error', `Ошибка: ${error.message}`);
     }
 }
 
-// Проверка через Telegram Mini Apps (используем встроенные методы)
-async function checkViaTelegramMiniApps() {
-    return new Promise((resolve) => {
-        // В реальном Mini App можно использовать различные методы
-        // Например, проверка через открытие канала и возврат результата
+// Проверка подписки через Telegram Web App
+async function checkTelegramSubscription(userId) {
+    return new Promise((resolve, reject) => {
+        // Этот метод работает только если бот добавлен в канал как администратор
+        // и имеет права на проверку участников
         
-        // Временная реализация - всегда true для демонстрации
-        // На практике вам нужно будет реализовать свою логику проверки
+        // Создаем временную кнопку для проверки подписки
+        const checkButton = {
+            type: 'check_subscription',
+            subscription_id: TELEGRAM_CHANNEL,
+            payload: JSON.stringify({ user_id: userId })
+        };
         
-        setTimeout(() => {
-            // Здесь может быть ваша кастомная логика проверки
-            // Например, через открытие канала и проверку возврата
-            resolve(true);
-        }, 1000);
+        // Пытаемся использовать Telegram Web App метод
+        if (Telegram.WebApp.checkSubscription) {
+            Telegram.WebApp.checkSubscription(checkButton, (result) => {
+                console.log('Subscription check result:', result);
+                resolve(result === true);
+            });
+        } else {
+            // Если метод не доступен, используем альтернативный способ
+            checkSubscriptionAlternative(userId).then(resolve).catch(reject);
+        }
     });
 }
 
-// Fallback проверка подписки (без сервера)
-async function checkSubscriptionFallback() {
-    showLoading('Проверка доступа...');
-    
-    // Простая проверка без сервера
-    // Можно использовать localStorage для запоминания проверки
-    const previouslyVerified = localStorage.getItem('subscriptionVerified');
-    
-    if (previouslyVerified === 'true') {
-        showMainContent();
-        return;
-    }
-    
-    // Показываем экран проверки подписки
-    showSubscriptionScreen();
+// Альтернативный способ проверки подписки
+async function checkSubscriptionAlternative(userId) {
+    // Этот метод использует открытие канала и проверку возврата
+    return new Promise((resolve) => {
+        // Показываем кнопку для ручной проверки
+        showManualCheckButton(resolve);
+    });
 }
 
-// Показать экран проверки подписки
-function showSubscriptionScreen() {
-    let html = `
-        <div class="subscription-screen">
-            <div class="subscription-icon">
-                <i class="fab fa-telegram"></i>
-            </div>
-            <h2>Требуется подписка</h2>
-            <p>Для доступа к контенту необходимо подписаться на наш Telegram канал</p>
+// Показать кнопку для ручной проверки
+function showManualCheckButton(resolveCallback) {
+    const html = `
+        <div class="manual-check">
+            <h3><i class="fab fa-telegram"></i> Проверка подписки</h3>
+            <p>Нажмите кнопку ниже чтобы проверить подписку на канал @${TELEGRAM_CHANNEL}</p>
             
-            <div class="channels-required">
-                <div class="channel-card">
-                    <strong>@SimpleDLC</strong>
-                    <p>Основной канал с играми и модами</p>
-                </div>
-            </div>
+            <button onclick="openChannelForCheck()" class="check-channel-btn">
+                <i class="fab fa-telegram"></i> Проверить подписку
+            </button>
             
-            <div class="verification-steps">
-                <h4>Как получить доступ:</h4>
-                <div class="step">
-                    <span class="step-number">1</span>
-                    <span>Подпишитесь на канал @SimpleDLC</span>
-                </div>
-                <div class="step">
-                    <span class="step-number">2</span>
-                    <span>Вернитесь в это приложение</span>
-                </div>
-                <div class="step">
-                    <span class="step-number">3</span>
-                    <span>Нажмите "Я подписался"</span>
-                </div>
+            <div class="manual-steps">
+                <p><strong>Как проверить:</strong></p>
+                <ol>
+                    <li>Нажмите "Проверить подписку"</li>
+                    <li>Откроется канал @${TELEGRAM_CHANNEL}</li>
+                    <li>Если вы подписаны - вернитесь в приложение</li>
+                    <li>Нажмите "Я подписан" ниже</li>
+                </ol>
             </div>
             
-            <div class="subscription-buttons">
-                <a href="https://t.me/SimpleDLC" target="_blank" class="subscribe-btn">
-                    <i class="fab fa-telegram"></i> Перейти в канал
-                </a>
-                <button onclick="verifySubscription()" class="verify-btn">
-                    <i class="fas fa-check"></i> Я подписался
-                </button>
-            </div>
+            <button onclick="confirmSubscription(true, resolveCallback)" class="confirm-btn success">
+                <i class="fas fa-check"></i> Я подписан
+            </button>
             
-            <div class="subscription-note">
-                <small>После подписки возвращайтесь и нажимайте "Я подписался"</small>
-            </div>
+            <button onclick="confirmSubscription(false, resolveCallback)" class="confirm-btn error">
+                <i class="fas fa-times"></i> Я не подписан
+            </button>
         </div>
     `;
+    
+    // Сохраняем callback в глобальной переменной
+    window.currentResolveCallback = resolveCallback;
     
     showCheckResult('info', html);
 }
 
-// Верификация подписки (когда пользователь говорит что подписался)
-function verifySubscription() {
-    // Сохраняем в localStorage что пользователь прошел проверку
-    localStorage.setItem('subscriptionVerified', 'true');
-    
-    showCheckResult('success', `
-        <div class="verification-success">
-            <i class="fas fa-check-circle"></i>
-            <h3>Доступ открыт!</h3>
-            <p>Подписка подтверждена. Наслаждайтесь контентом!</p>
-        </div>
-    `);
-    
-    setTimeout(() => {
-        showMainContent();
-    }, 2000);
+// Открыть канал для проверки
+function openChannelForCheck() {
+    if (Telegram.WebApp.openTelegramLink) {
+        Telegram.WebApp.openTelegramLink(`https://t.me/${TELEGRAM_CHANNEL}`);
+    } else {
+        window.open(`https://t.me/${TELEGRAM_CHANNEL}`, '_blank');
+    }
 }
 
-// Показать что подписка требуется (для Telegram)
+// Подтверждение подписки
+function confirmSubscription(isSubscribed, resolveCallback) {
+    if (resolveCallback) {
+        resolveCallback(isSubscribed);
+    } else if (window.currentResolveCallback) {
+        window.currentResolveCallback(isSubscribed);
+    }
+    
+    if (isSubscribed) {
+        showMainContent();
+    } else {
+        showSubscriptionRequired();
+    }
+}
+
+// Показать что подписка требуется
 function showSubscriptionRequired() {
-    let html = `
-        <div class="telegram-subscription">
-            <div class="tg-icon">
-                <i class="fab fa-telegram"></i>
-            </div>
-            <h2>Подписка требуется</h2>
-            <p>Для доступа к приложению необходимо быть подписанным на наш канал</p>
-            
-            <div class="tg-channel">
-                <strong>@SimpleDLC</strong>
+    const html = `
+        <div class="subscription-required">
+            <div class="required-icon">
+                <i class="fas fa-lock"></i>
             </div>
             
-            <div class="tg-buttons">
-                <button onclick="Telegram.WebApp.openTelegramLink('https://t.me/SimpleDLC')" class="tg-subscribe-btn">
-                    <i class="fab fa-telegram"></i> Подписаться
+            <h2>Требуется подписка</h2>
+            
+            <p>Для доступа к приложению необходимо быть подписанным на наш Telegram канал</p>
+            
+            <div class="channel-info">
+                <div class="channel-card">
+                    <strong>@${TELEGRAM_CHANNEL}</strong>
+                    <span>Основной канал с играми</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button onclick="openChannelAndCheck()" class="primary-btn">
+                    <i class="fab fa-telegram"></i> Подписаться и проверить
                 </button>
-                <button onclick="retryTelegramCheck()" class="tg-retry-btn">
+                
+                <button onclick="retrySubscriptionCheck()" class="secondary-btn">
                     <i class="fas fa-sync-alt"></i> Проверить снова
                 </button>
+            </div>
+            
+            <div class="help-text">
+                <small>После подписки вернитесь и нажмите "Проверить снова"</small>
             </div>
         </div>
     `;
@@ -193,9 +227,29 @@ function showSubscriptionRequired() {
     showCheckResult('error', html);
 }
 
-// Повторная проверка для Telegram
-function retryTelegramCheck() {
-    checkSubscriptionWithTelegram();
+// Открыть канал и начать проверку
+function openChannelAndCheck() {
+    openChannelForCheck();
+    
+    // Показываем сообщение с инструкцией
+    setTimeout(() => {
+        showCheckResult('info', `
+            <div class="instruction">
+                <h4><i class="fas fa-info-circle"></i> Инструкция</h4>
+                <p>Канал открыт. После подписки:</p>
+                <ol>
+                    <li>Вернитесь в это приложение</li>
+                    <li>Нажмите "Проверить снова"</li>
+                    <li>Если вы подписаны - доступ будет открыт</li>
+                </ol>
+            </div>
+        `);
+    }, 1000);
+}
+
+// Повторная проверка подписки
+function retrySubscriptionCheck() {
+    checkSubscription();
 }
 
 // Показать загрузку
@@ -226,9 +280,49 @@ function showMainContent() {
     if (subscriptionCheck) subscriptionCheck.classList.add('hidden');
     if (mainContent) mainContent.classList.remove('hidden');
     
+    // Сохраняем что пользователь прошел проверку
+    localStorage.setItem('tg_subscription_verified', 'true');
+    localStorage.setItem('tg_verified_channel', TELEGRAM_CHANNEL);
+    
     setupTheme();
     loadGames();
     setupSearch();
+}
+
+// Показать ошибку "не в Telegram"
+function showNotInTelegramError() {
+    const html = `
+        <div class="not-in-telegram">
+            <div class="error-icon">
+                <i class="fab fa-telegram"></i>
+            </div>
+            
+            <h2>Требуется Telegram</h2>
+            
+            <p>Это приложение работает только внутри Telegram Messenger</p>
+            
+            <div class="telegram-buttons">
+                <a href="https://t.me/SimpleDLC" target="_blank" class="tg-direct-btn">
+                    <i class="fab fa-telegram"></i> Открыть в Telegram
+                </a>
+                
+                <a href="tg://resolve?domain=SimpleDLC" class="tg-deep-link">
+                    <i class="fas fa-mobile-alt"></i> Открыть в приложении
+                </a>
+            </div>
+            
+            <div class="instruction">
+                <p><strong>Как открыть:</strong></p>
+                <ol>
+                    <li>Откройте Telegram</li>
+                    <li>Найдите канал @SimpleDLC</li>
+                    <li>Запустите приложение из канала</li>
+                </ol>
+            </div>
+        </div>
+    `;
+    
+    showCheckResult('error', html);
 }
 
 // ==================== ОСНОВНЫЕ ФУНКЦИИ САЙТА ====================
@@ -295,11 +389,15 @@ function handleDownload(event, gameId) {
     event.preventDefault();
     const link = event.target.href || event.target.parentElement.href;
     
-    // Можно добавить логику перед скачиванием
-    console.log(`Скачивание игры ID: ${gameId}`);
+    // Логируем скачивание
+    console.log(`User ${Telegram.WebApp.initDataUnsafe.user?.id} downloading game ${gameId}`);
     
     // Открываем ссылку
-    window.open(link, '_blank');
+    if (Telegram.WebApp.openLink) {
+        Telegram.WebApp.openLink(link);
+    } else {
+        window.open(link, '_blank');
+    }
 }
 
 // Форматирование описания
@@ -352,35 +450,53 @@ function setupTheme() {
 
     if (!themeToggle) return;
 
-    // Используем тему Telegram если доступно
-    if (window.Telegram && window.Telegram.WebApp) {
+    // Используем тему Telegram
+    if (isTelegramWebApp()) {
         const tgTheme = Telegram.WebApp.colorScheme;
         if (tgTheme === 'dark') {
             body.classList.add('dark-theme');
             themeToggle.checked = true;
         }
+        
+        // Следим за изменением темы
+        Telegram.WebApp.onEvent('themeChanged', function() {
+            if (Telegram.WebApp.colorScheme === 'dark') {
+                body.classList.add('dark-theme');
+                themeToggle.checked = true;
+            } else {
+                body.classList.remove('dark-theme');
+                themeToggle.checked = false;
+            }
+        });
     }
 
     // Переключение темы
     themeToggle.addEventListener('change', function() {
         if (this.checked) {
             body.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
         } else {
             body.classList.remove('dark-theme');
-            localStorage.setItem('theme', 'light');
         }
     });
 }
 
 // Глобальные функции
-window.verifySubscription = verifySubscription;
-window.retryTelegramCheck = retryTelegramCheck;
+window.openChannelForCheck = openChannelForCheck;
+window.confirmSubscription = confirmSubscription;
+window.openChannelAndCheck = openChannelAndCheck;
+window.retrySubscriptionCheck = retrySubscriptionCheck;
 window.loadGames = loadGames;
 window.handleDownload = handleDownload;
 
-// Сброс проверки подписки (для тестирования)
-window.resetSubscription = function() {
-    localStorage.removeItem('subscriptionVerified');
-    window.location.reload();
+// Отладочная информация
+window.debugInfo = function() {
+    if (isTelegramWebApp()) {
+        const user = Telegram.WebApp.initDataUnsafe.user;
+        console.log('=== Telegram Debug Info ===');
+        console.log('User:', user);
+        console.log('Theme:', Telegram.WebApp.colorScheme);
+        console.log('Platform:', Telegram.WebApp.platform);
+        console.log('Version:', Telegram.WebApp.version);
+    }
+    console.log('Games data:', gamesData);
 };

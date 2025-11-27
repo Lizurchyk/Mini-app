@@ -1,18 +1,21 @@
 // Данные игр
 let gamesData = [];
 
-// ПРЯМАЯ ССЫЛКА на ваш games.json файл
-const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json'; // ЗАМЕНИТЕ НА ВАШУ ССЫЛКУ
+// ССЫЛКА НА ВАШ JSON ФАЙЛ - ЗАМЕНИТЕ НА СВОЮ!
+const GAMES_JSON_URL = 'https://paste.tc/raw/UNMtUkzj'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
 
-// Загрузка данных игр из JSON файла
+// Загрузка данных игр из JSON
 async function loadGames() {
+    const container = document.getElementById('gamesContainer');
+    
     try {
-        console.log('Загрузка данных из:', GAMES_JSON_URL);
+        container.innerHTML = '<div class="loading">Загрузка игр...</div>';
         
+        console.log('Загрузка данных из:', GAMES_JSON_URL);
         const response = await fetch(GAMES_JSON_URL);
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`Ошибка HTTP: ${response.status}`);
         }
         
         gamesData = await response.json();
@@ -20,24 +23,18 @@ async function loadGames() {
         displayGames(gamesData);
         
     } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
-        showError(`Не удалось загрузить данные: ${error.message}`);
+        console.error('Ошибка загрузки:', error);
+        container.innerHTML = `
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Ошибка загрузки данных</h3>
+                <p>${error.message}</p>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    Проверьте ссылку на JSON файл
+                </p>
+            </div>
+        `;
     }
-}
-
-// Показать ошибку
-function showError(message) {
-    const container = document.getElementById('gamesContainer');
-    container.innerHTML = `
-        <div class="no-results">
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px; color: #ff6b6b;"></i>
-            <h3>Ошибка загрузки</h3>
-            <p>${message}</p>
-            <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
-                Проверьте ссылку: ${GAMES_JSON_URL}
-            </p>
-        </div>
-    `;
 }
 
 // Отображение карточек игр
@@ -45,7 +42,7 @@ function displayGames(games) {
     const container = document.getElementById('gamesContainer');
     
     if (!games || games.length === 0) {
-        container.innerHTML = '<div class="no-results">Нет доступных игр</div>';
+        container.innerHTML = '<div class="no-results">Игры не найдены</div>';
         return;
     }
 
@@ -55,15 +52,22 @@ function displayGames(games) {
                  onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=250&fit=crop'">
             <div class="game-info">
                 <h3 class="game-title">${game.name}</h3>
-                <p class="game-description">${game.description}</p>
+                <div class="game-description">${formatDescription(game.description)}</div>
                 <div class="game-meta">
-                    <span>Версия: ${game.version}</span>
-                    <span class="game-mod">${game.modification}</span>
+                    <span class="game-version">Версия: ${game.version}</span>
                 </div>
-                <a href="${game.link}" class="game-link" target="_blank">Скачать</a>
+                <a href="${game.link}" class="game-link" target="_blank">Установить</a>
             </div>
         </div>
     `).join('');
+}
+
+// Функция для форматирования описания
+function formatDescription(description) {
+    if (Array.isArray(description)) {
+        return description.join('<br><br>');
+    }
+    return description.replace(/\n/g, '<br>');
 }
 
 // Поиск игр
@@ -77,8 +81,7 @@ function searchGames(query) {
 
     const filteredGames = gamesData.filter(game => 
         game.name.toLowerCase().includes(searchTerm) ||
-        game.description.toLowerCase().includes(searchTerm) ||
-        game.modification.toLowerCase().includes(searchTerm)
+        game.description.toLowerCase().includes(searchTerm)
     );
 
     displayGames(filteredGames);
@@ -108,12 +111,12 @@ function setupTheme() {
     });
 }
 
-// Инициализация при загрузке
+// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
     setupTheme();
     loadGames();
 
-    // Поиск при вводе
+    // Поиск
     const searchInput = document.getElementById('searchInput');
     let searchTimeout;
     
@@ -124,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     });
 
-    // Поиск при нажатии Enter
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             searchGames(this.value);

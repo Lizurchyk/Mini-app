@@ -1,0 +1,317 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --purple: #8A2BE2;
+    --purple-light: #BA55D3;
+    --white: #fff;
+    --black: #1a1a1a;
+    --gray-light: #ccc;
+    --gray-dark: #555;
+    --gray-header: #4a4a4a;
+    --transition: all 0.3s ease;
+}
+
+body {
+    background: var(--white);
+    color: #333;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding-top: 80px;
+    min-height: 100vh;
+    transition: var(--transition);
+}
+
+body.dark-theme {
+    background: var(--black);
+    color: var(--white);
+}
+
+/* === ШАПКА === */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--gray-header);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 80px;
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .header { background: #2d2d2d; }
+
+.logo {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+}
+
+.logo-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+}
+
+.theme-switcher {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.theme-label {
+    color: white;
+    font-size: 14px;
+}
+
+/* === ПЕРЕКЛЮЧАТЕЛЬ === */
+.switch {
+    width: 70px;
+    height: 34px;
+    background: white;
+    border: 2px solid #000;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+body.dark-theme .switch {
+    background: #333;
+    border-color: #fff;
+}
+
+.slider {
+    width: 26px;
+    height: 26px;
+    background: #000;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    transition: var(--transition);
+}
+
+body.dark-theme .slider {
+    background: #fff;
+    transform: translateX(34px);
+}
+
+#themeToggle { display: none; }
+
+/* === ПОИСК === */
+.search-section {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 25px 16px 55px;
+    font-size: 16px;
+    border: 2px solid var(--gray-light);
+    border-radius: 30px;
+    background: var(--white);
+    color: #333;
+    outline: none;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .search-input {
+    background: #333;
+    border-color: var(--gray-dark);
+    color: var(--white);
+}
+
+.search-input:focus {
+    border-color: var(--purple);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.2);
+}
+
+.search-input::placeholder { color: #888; }
+
+.search-icon {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--purple);
+    font-size: 18px;
+}
+
+/* === КОНТЕНТ === */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* === КАРТОЧКИ ИГР === */
+.games-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 40px 0;
+}
+
+.game-card {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+body.dark-theme .game-card {
+    background: #2d2d2d;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(138, 43, 226, 0.2);
+}
+
+.game-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.game-info {
+    padding: 20px;
+}
+
+.game-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: inherit;
+}
+
+.game-description {
+    color: inherit;
+    opacity: 0.8;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.game-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--purple);
+    margin-bottom: 15px;
+}
+
+.game-mod {
+    background: var(--purple);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+}
+
+.game-link {
+    display: block;
+    text-align: center;
+    background: var(--purple);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: var(--transition);
+}
+
+.game-link:hover {
+    background: var(--purple-light);
+    transform: translateY(-2px);
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: inherit;
+    opacity: 0.6;
+    grid-column: 1 / -1;
+}
+
+/* === РАЗДЕЛИТЕЛЬ === */
+.divider {
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--purple), transparent);
+    border: none;
+    margin: 60px auto;
+    opacity: 0.6;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+    .header { min-height: 70px; }
+    .logo-text { font-size: 24px; }
+    .theme-switcher { right: 20px; }
+    .theme-label { display: none; }
+    .welcome-title { font-size: 2rem; }
+    body { padding-top: 70px; }
+    .games-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text { font-size: 20px; }
+    .search-input { 
+        padding: 14px 20px 14px 50px;
+        font-size: 14px;
+    }
+    .search-icon {
+        left: 20px;
+        font-size: 16px;
+    }
+    .welcome-title { font-size: 1.8rem; }
+    .games-container {
+        grid-template-columns: 1fr;
+    }
+}

@@ -2,7 +2,7 @@
 const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/main/buttons.json';
 const GITHUB_API_URL = 'https://api.github.com/repos/Lizurchyk/Mini-app/contents/buttons.json';
 
-// Токен доступа к GitHub API (нужно создать в настройках GitHub)
+// Токен доступа к GitHub API
 const GITHUB_TOKEN = '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'; // ЗАМЕНИТЕ на ваш токен
 
 // Тексты для отображения при нажатии на кнопки
@@ -22,7 +22,7 @@ class ButtonManager {
         this.buttonsContainer = document.getElementById('buttonsContainer');
         this.output = document.getElementById('output');
         this.buttons = [];
-        this.sha = null; // SHA хэш файла для обновления
+        this.sha = null;
         this.init();
     }
 
@@ -44,7 +44,7 @@ class ButtonManager {
         }
         
         const buttonsData = await response.json();
-        this.buttons = buttonsData.buttons;
+        this.buttons = buttonsData.buttons || [];
         
         // Получаем информацию о файле для получения SHA
         await this.getFileSHA();
@@ -97,24 +97,24 @@ class ButtonManager {
             <strong>${buttonName}</strong><br>
             ${randomText}<br>
             <small>Время нажатия: ${timestamp}</small>
-            <div class="updating">Удаляем кнопку из GitHub...</div>
+            <div class="updating">Удаляем ВСЕ данные из buttons.json...</div>
         `;
 
         try {
-            // Удаляем кнопку из массива
-            const removedButton = this.buttons.splice(buttonIndex, 1)[0];
+            // Удаляем ВСЕ данные из файла на GitHub
+            await this.clearGitHubFile();
             
-            // Обновляем файл на GitHub
-            await this.updateGitHubFile();
+            // Очищаем локальный массив
+            this.buttons = [];
             
-            // Перерисовываем кнопки
+            // Перерисовываем кнопки (их не будет)
             this.renderButtons();
             
             this.output.innerHTML = `
                 <strong>${buttonName}</strong><br>
                 ${randomText}<br>
                 <small>Время нажатия: ${timestamp}</small>
-                <div class="success">Кнопка успешно удалена из GitHub!</div>
+                <div class="success">Файл buttons.json полностью очищен на GitHub!</div>
             `;
             
         } catch (error) {
@@ -122,12 +122,8 @@ class ButtonManager {
                 <strong>${buttonName}</strong><br>
                 ${randomText}<br>
                 <small>Время нажатия: ${timestamp}</small>
-                <div class="error">Ошибка удаления из GitHub: ${error.message}</div>
+                <div class="error">Ошибка очистки файла: ${error.message}</div>
             `;
-            
-            // Возвращаем кнопку обратно в случае ошибки
-            this.buttons.splice(buttonIndex, 0, removedButton);
-            this.renderButtons();
         }
 
         // Добавляем анимацию
@@ -137,18 +133,19 @@ class ButtonManager {
         }, 10);
     }
 
-    async updateGitHubFile() {
+    async clearGitHubFile() {
         if (!GITHUB_TOKEN || GITHUB_TOKEN === 'your_github_token_here') {
             throw new Error('GitHub токен не настроен. Проверьте GITHUB_TOKEN в коде.');
         }
 
-        const updatedContent = {
-            buttons: this.buttons
+        // Создаем пустой JSON объект
+        const emptyContent = {
+            buttons: []
         };
 
         const updateData = {
-            message: `Remove button from buttons.json`,
-            content: btoa(unescape(encodeURIComponent(JSON.stringify(updatedContent, null, 2)))),
+            message: `CLEAR ALL DATA: Complete clear of buttons.json`,
+            content: btoa(unescape(encodeURIComponent(JSON.stringify(emptyContent, null, 2)))),
             sha: this.sha,
             branch: 'main'
         };
@@ -175,8 +172,14 @@ class ButtonManager {
     showNoButtonsMessage() {
         this.buttonsContainer.innerHTML = `
             <div style="text-align: center; padding: 20px; color: #666;">
-                <p>Все кнопки удалены!</p>
-                <button onclick="location.reload()" style="margin-top: 10px;">
+                <h3>✅ Все данные удалены!</h3>
+                <p>Файл buttons.json на GitHub теперь пустой</p>
+                <p><strong>Текущее содержимое файла:</strong></p>
+                <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; text-align: left;">
+{
+    "buttons": []
+}</pre>
+                <button onclick="location.reload()" style="margin-top: 10px; padding: 10px 20px;">
                     Перезагрузить страницу
                 </button>
             </div>
@@ -190,8 +193,16 @@ class ButtonManager {
     showError(message) {
         this.buttonsContainer.innerHTML = `
             <div class="error">
+                <h3>Ошибка</h3>
                 ${message}
                 <br><br>
+                <div style="font-size: 14px; margin-top: 10px;">
+                    <strong>Как исправить:</strong><br>
+                    1. Создайте GitHub Personal Access Token с правами repo<br>
+                    2. Замените 'your_github_token_here' на ваш токен в коде<br>
+                    3. Убедитесь, что репозиторий существует и доступен
+                </div>
+                <br>
                 <button onclick="location.reload()">Попробовать снова</button>
             </div>
         `;
@@ -230,10 +241,9 @@ style.textContent = `
         color: #721c24;
         background-color: #f8d7da;
         border: 1px solid #f5c6cb;
-        padding: 8px;
+        padding: 15px;
         border-radius: 4px;
         margin-top: 10px;
-        font-size: 14px;
     }
     
     .error button {
@@ -248,6 +258,11 @@ style.textContent = `
     
     .error button:hover {
         background-color: #c82333;
+    }
+    
+    pre {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
     }
 `;
 document.head.appendChild(style);

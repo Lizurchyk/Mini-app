@@ -1,273 +1,131 @@
-// URL к вашему buttons.json на GitHub
-const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/main/buttons.json';
-const GITHUB_API_URL = 'https://api.github.com/repos/Lizurchyk/Mini-app/contents/buttons.json';
+// Данные игр
+let gamesData = [];
 
-// Токен доступа к GitHub API
-const GITHUB_TOKEN = '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'; // ЗАМЕНИТЕ на ваш токен
-
-// Тексты для отображения при нажатии на кнопки
-const buttonTexts = [
-    "Привет! Это первое сообщение!",
-    "Отличная работа! Вы нажали на кнопку!",
-    "JavaScript работает прекрасно!",
-    "Данные загружены из GitHub!",
-    "Это демонстрационный текст",
-    "Программирование - это весело!",
-    "Вы создали интерактивную страницу!",
-    "GitHub API в действии!"
-];
- 
-class ButtonManager {
-    constructor() {
-        this.buttonsContainer = document.getElementById('buttonsContainer');
-        this.output = document.getElementById('output');
-        this.buttons = [];
-        this.sha = null;
-        this.init();
-    }
-
-    async init() {
-        try {
-            await this.loadButtonsFromGitHub();
-        } catch (error) {
-            this.showError('Ошибка загрузки кнопок: ' + error.message);
-        }
-    }
-
-    async loadButtonsFromGitHub() {
-        this.showLoading('Загрузка кнопок из GitHub...');
-        
-        const response = await fetch(GITHUB_JSON_URL);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const buttonsData = await response.json();
-        this.buttons = buttonsData.buttons || [];
-        
-        // Получаем информацию о файле для получения SHA
-        await this.getFileSHA();
-        
-        this.renderButtons();
-    }
-
-    async getFileSHA() {
-        try {
-            const response = await fetch(GITHUB_API_URL);
-            if (response.ok) {
-                const fileInfo = await response.json();
-                this.sha = fileInfo.sha;
+// Загрузка данных игр из JSON файла
+function loadGames() {
+    // Создаем XMLHttpRequest для обхода CORS
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'games.json', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                try {
+                    gamesData = JSON.parse(xhr.responseText);
+                    console.log('Данные загружены из games.json:', gamesData);
+                    displayGames(gamesData);
+                } catch (e) {
+                    console.error('Ошибка парсинга JSON:', e);
+                    showError('Ошибка в формате games.json');
+                }
+            } else {
+                console.error('Ошибка загрузки games.json:', xhr.status);
+                showError('Файл games.json не найден или недоступен');
             }
-        } catch (error) {
-            console.warn('Не удалось получить SHA файла:', error);
         }
-    }
-
-    renderButtons() {
-        this.buttonsContainer.innerHTML = '';
-        
-        this.buttons.forEach((button, index) => {
-            const buttonElement = this.createButtonElement(button, index);
-            this.buttonsContainer.appendChild(buttonElement);
-        });
-
-        if (this.buttons.length === 0) {
-            this.showNoButtonsMessage();
-        }
-    }
-
-    createButtonElement(button, index) {
-        const buttonElement = document.createElement('button');
-        buttonElement.textContent = button.name;
-        buttonElement.setAttribute('data-index', index);
-        buttonElement.addEventListener('click', () => this.handleButtonClick(index));
-        
-        return buttonElement;
-    }
-
-    async handleButtonClick(buttonIndex) {
-        const buttonName = this.buttons[buttonIndex].name;
-        
-        // Показываем текст
-        const randomText = buttonTexts[Math.floor(Math.random() * buttonTexts.length)];
-        const timestamp = new Date().toLocaleTimeString();
-        
-        this.output.innerHTML = `
-            <strong>${buttonName}</strong><br>
-            ${randomText}<br>
-            <small>Время нажатия: ${timestamp}</small>
-            <div class="updating">Удаляем ВСЕ данные из buttons.json...</div>
-        `;
-
-        try {
-            // Удаляем ВСЕ данные из файла на GitHub
-            await this.clearGitHubFile();
-            
-            // Очищаем локальный массив
-            this.buttons = [];
-            
-            // Перерисовываем кнопки (их не будет)
-            this.renderButtons();
-            
-            this.output.innerHTML = `
-                <strong>${buttonName}</strong><br>
-                ${randomText}<br>
-                <small>Время нажатия: ${timestamp}</small>
-                <div class="success">Файл buttons.json полностью очищен на GitHub!</div>
-            `;
-            
-        } catch (error) {
-            this.output.innerHTML = `
-                <strong>${buttonName}</strong><br>
-                ${randomText}<br>
-                <small>Время нажатия: ${timestamp}</small>
-                <div class="error">Ошибка очистки файла: ${error.message}</div>
-            `;
-        }
-
-        // Добавляем анимацию
-        this.output.style.animation = 'none';
-        setTimeout(() => {
-            this.output.style.animation = 'fadeIn 0.5s';
-        }, 10);
-    }
-
-    async clearGitHubFile() {
-        if (!GITHUB_TOKEN || GITHUB_TOKEN === 'your_github_token_here') {
-            throw new Error('GitHub токен не настроен. Проверьте GITHUB_TOKEN в коде.');
-        }
-
-        // Создаем пустой JSON объект
-        const emptyContent = {
-            buttons: []
-        };
-
-        const updateData = {
-            message: `CLEAR ALL DATA: Complete clear of buttons.json`,
-            content: btoa(unescape(encodeURIComponent(JSON.stringify(emptyContent, null, 2)))),
-            sha: this.sha,
-            branch: 'main'
-        };
-
-        const response = await fetch(GITHUB_API_URL, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updateData)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-
-        // Обновляем SHA после успешного обновления
-        const responseData = await response.json();
-        this.sha = responseData.content.sha;
-    }
-
-    showNoButtonsMessage() {
-        this.buttonsContainer.innerHTML = `
-            <div style="text-align: center; padding: 20px; color: #666;">
-                <h3>✅ Все данные удалены!</h3>
-                <p>Файл buttons.json на GitHub теперь пустой</p>
-                <p><strong>Текущее содержимое файла:</strong></p>
-                <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; text-align: left;">
-{
-    "buttons": []
-}</pre>
-                <button onclick="location.reload()" style="margin-top: 10px; padding: 10px 20px;">
-                    Перезагрузить страницу
-                </button>
-            </div>
-        `;
-    }
-
-    showLoading(message) {
-        this.buttonsContainer.innerHTML = `<div class="loading">${message}</div>`;
-    }
-
-    showError(message) {
-        this.buttonsContainer.innerHTML = `
-            <div class="error">
-                <h3>Ошибка</h3>
-                ${message}
-                <br><br>
-                <div style="font-size: 14px; margin-top: 10px;">
-                    <strong>Как исправить:</strong><br>
-                    1. Создайте GitHub Personal Access Token с правами repo<br>
-                    2. Замените 'your_github_token_here' на ваш токен в коде<br>
-                    3. Убедитесь, что репозиторий существует и доступен
-                </div>
-                <br>
-                <button onclick="location.reload()">Попробовать снова</button>
-            </div>
-        `;
-    }
+    };
+    xhr.send();
 }
 
-// Добавляем CSS анимацию и стили
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .updating {
-        color: #856404;
-        background-color: #fff3cd;
-        border: 1px solid #ffeaa7;
-        padding: 8px;
-        border-radius: 4px;
-        margin-top: 10px;
-        font-size: 14px;
-    }
-    
-    .success {
-        color: #155724;
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        padding: 8px;
-        border-radius: 4px;
-        margin-top: 10px;
-        font-size: 14px;
-    }
-    
-    .error {
-        color: #721c24;
-        background-color: #f8d7da;
-        border: 1px solid #f5c6cb;
-        padding: 15px;
-        border-radius: 4px;
-        margin-top: 10px;
-    }
-    
-    .error button {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    
-    .error button:hover {
-        background-color: #c82333;
-    }
-    
-    pre {
-        font-family: 'Courier New', monospace;
-        font-size: 12px;
-    }
-`;
-document.head.appendChild(style);
+// Показать ошибку
+function showError(message) {
+    const container = document.getElementById('gamesContainer');
+    container.innerHTML = `
+        <div class="no-results">
+            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+            <h3>${message}</h3>
+            <p>Убедитесь, что файл games.json находится в той же папке</p>
+        </div>
+    `;
+}
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    new ButtonManager();
+// Отображение карточек игр
+function displayGames(games) {
+    const container = document.getElementById('gamesContainer');
+    
+    if (!games || games.length === 0) {
+        container.innerHTML = '<div class="no-results">Игры не найдены в games.json</div>';
+        return;
+    }
+
+    container.innerHTML = games.map(game => `
+        <div class="game-card" data-id="${game.id}">
+            <img src="${game.image}" alt="${game.name}" class="game-image" 
+                 onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=250&fit=crop'">
+            <div class="game-info">
+                <h3 class="game-title">${game.name}</h3>
+                <p class="game-description">${game.description}</p>
+                <div class="game-meta">
+                    <span>Версия: ${game.version}</span>
+                    <span class="game-mod">${game.modification}</span>
+                </div>
+                <a href="${game.link}" class="game-link" target="_blank">Скачать</a>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Поиск игр
+function searchGames(query) {
+    const searchTerm = query.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        displayGames(gamesData);
+        return;
+    }
+
+    const filteredGames = gamesData.filter(game => 
+        game.name.toLowerCase().includes(searchTerm) ||
+        game.description.toLowerCase().includes(searchTerm) ||
+        game.modification.toLowerCase().includes(searchTerm)
+    );
+
+    displayGames(filteredGames);
+}
+
+// Управление темой
+function setupTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // Загрузка сохраненной темы
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+
+    // Переключение темы
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    setupTheme();
+    loadGames(); // Загружаем данные из games.json
+
+    // Поиск при вводе
+    const searchInput = document.getElementById('searchInput');
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchGames(this.value);
+        }, 300);
+    });
+
+    // Поиск при нажатии Enter
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchGames(this.value);
+        }
+    });
 });

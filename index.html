@@ -1,174 +1,39 @@
-<!DOCTYPE html>
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Проверка подписок</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 16px;
-        }
-        
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px 0;
-        }
-        
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        
-        .stats {
-            background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .stats-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--tg-theme-button-color, #0088cc);
-        }
-        
-        .stats-text {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #999999);
-            margin-top: 4px;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--tg-theme-hint-color, #999999);
-        }
-        
-        .channel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .channel-card {
-            background: var(--tg-theme-secondary-bg-color, #f4f4f5);
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .channel-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #0088cc, #00a2e8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .channel-info {
-            flex: 1;
-        }
-        
-        .channel-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        
-        .channel-username {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color, #999999);
-        }
-        
-        .subscription-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
-        .status-subscribed {
-            background: rgba(0, 200, 83, 0.1);
-            color: #00c853;
-        }
-        
-        .status-not-subscribed {
-            background: rgba(244, 67, 54, 0.1);
-            color: #f44336;
-        }
-        
-        .status-error {
-            background: rgba(255, 152, 0, 0.1);
-            color: #ff9800;
-        }
-        
-        .error-message {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            color: #f44336;
-            margin: 20px 0;
-        }
-        
-        .retry-button {
-            background: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-    </style>
+    <title>SimpleDLC - Каталог игр</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Проверка подписок</h1>
+    <header class="header">
+        <div class="logo">
+            <h1 class="logo-text">SimpleDLC</h1>
         </div>
-        
-        <div id="stats" style="display: none;">
-            <div class="stats">
-                <div class="stats-number" id="subscribedCount">0</div>
-                <div class="stats-text">из <span id="totalCount">0</span> каналов</div>
-            </div>
+        <div class="theme-switcher">
+            <span class="theme-label">Тема</span>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span> 
+            </label>
         </div>
-        
-        <div id="content">
-            <div class="loading" id="loading">
-                Проверяем ваши подписки...
-            </div>
-        </div>
-    </div>
+    </header>
 
-    <script src="app.js"></script>
+    <section class="search-section">
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
+        </div>      
+    </section>
+
+    <main class="main-content">
+        <div class="games-container" id="gamesContainer">
+            <div class="loading">Загрузка игр...</div>
+        </div>
+    </main>
+
+    <script src="script/script.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -8,32 +8,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <h1 class="logo-text">SimpleDLC</h1>
+    <!-- Экран проверки подписки -->
+    <div id="subscriptionCheck" class="subscription-check">
+        <div class="check-container">
+            <div class="check-icon">
+                <i class="fab fa-telegram"></i>
+            </div>
+            <h2>Проверка подписки</h2>
+            <p>Для доступа к контенту необходимо быть подписанным на наш Telegram канал</p>
+            <div class="channel-info">
+                <strong>Канал: @SimpleDLC</strong>
+            </div>
+            <div class="check-buttons">
+                <button id="checkSubscription" class="check-btn">
+                    <i class="fas fa-sync-alt"></i>
+                    Проверить подписку
+                </button>
+                <a href="https://t.me/SimpleDLC" target="_blank" class="channel-btn">
+                    <i class="fab fa-telegram"></i>
+                    Перейти в канал
+                </a>
+            </div>
+            <div id="checkResult" class="check-result"></div>
         </div>
-        <div class="theme-switcher">
-            <span class="theme-label">Тема</span>
-            <label class="switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider"></span> 
-            </label>
-        </div>
-    </header>
+    </div>
 
-    <section class="search-section">
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
-        </div>      
-    </section>
+    <!-- Основной контент (скрыт до проверки) -->
+    <div id="mainContent" class="main-content hidden">
+        <header class="header">
+            <div class="logo">
+                <h1 class="logo-text">SimpleDLC</h1>
+            </div>
+            <div class="theme-switcher">
+                <span class="theme-label">Тема</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span> 
+                </label>
+            </div>
+        </header>
 
-    <main class="main-content">
-        <div class="games-container" id="gamesContainer">
-            <div class="loading">Загрузка игр...</div>
-        </div>
-    </main>
+        <section class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
+            </div>      
+        </section>
 
-    <script src="script/script.js"></script>
+        <main class="main-content-inner">
+            <div class="games-container" id="gamesContainer">
+                <div class="loading">Загрузка игр...</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

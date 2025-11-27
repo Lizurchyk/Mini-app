@@ -3,79 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кнопки из GitHub</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .buttons-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #0056b3;
-        }
-        
-        .output {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            min-height: 50px;
-        }
-        
-        .loading {
-            color: #666;
-            font-style: italic;
-        }
-        
-        .error {
-            color: #dc3545;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-    </style>
+    <title>Изменение файла на GitHub</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Кнопки из GitHub</h1>
-        
-        <div class="buttons-container" id="buttonsContainer">
-            <div class="loading">Загрузка кнопок...</div>
-        </div>
-        
-        <div class="output" id="output">
-            Текст появится здесь после нажатия на кнопку
-        </div>
+    <h1>Изменение файла buttons.json на GitHub</h1>
+    
+    <div>
+        <label for="token">GitHub Personal Access Token:</label>
+        <input type="password" id="token" placeholder="Введите ваш токен">
     </div>
+    
+    <div>
+        <label for="repo">Репозиторий (владелец/репозиторий):</label>
+        <input type="text" id="repo" placeholder="username/repository">
+    </div>
+    
+    <div>
+        <label for="content">Содержимое файла:</label>
+        <textarea id="content" rows="10" cols="50" placeholder='{"button": "новые данные"}'></textarea>
+    </div>
+    
+    <button onclick="updateFile()">Обновить файл на GitHub</button>
+    
+    <div id="result"></div>
 
-    <script src="JS/script.js"></script>
+    <script>
+        async function updateFile() {
+            const token = document.getElementById('token').value;
+            const repo = document.getElementById('repo').value;
+            const content = document.getElementById('content').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!token || !repo || !content) {
+                resultDiv.innerHTML = '<p style="color: red;">Заполните все поля!</p>';
+                return;
+            }
+            
+            try {
+                // Сначала получаем информацию о текущем файле
+                const getResponse = await fetch(`https://api.github.com/repos/${repo}/contents/buttons.json`, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (!getResponse.ok) {
+                    throw new Error('Файл не найден или нет доступа');
+                }
+                
+                const fileData = await getResponse.json();
+                const sha = fileData.sha;
+                
+                // Обновляем файл
+                const updateResponse = await fetch(`https://api.github.com/repos/${repo}/contents/buttons.json`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Обновление buttons.json через веб-интерфейс',
+                        content: btoa(unescape(encodeURIComponent(content))),
+                        sha: sha
+                    })
+                });
+                
+                if (updateResponse.ok) {
+                    resultDiv.innerHTML = '<p style="color: green;">Файл успешно обновлен!</p>';
+                } else {
+                    const error = await updateResponse.json();
+                    throw new Error(error.message);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Ошибка: ${error.message}</p>`;
+            }
+        }
+    </script>
 </body>
 </html>

@@ -16,7 +16,7 @@ const buttonTexts = [
     "Вы создали интерактивную страницу!",
     "GitHub API в действии!"
 ];
-
+ 
 class ButtonManager {
     constructor() {
         this.buttonsContainer = document.getElementById('buttonsContainer');

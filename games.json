@@ -38,5 +38,13 @@
         "version": "1.04",
         "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RyaF8JVjTr3GDBzf8_svUdkxsu-7ODMKCQc8T774s7BJG6Fnpz2lslw&s=10",
         "link": "https://www.mediafire.com/file/xlfydrj8m02qrrk/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
+    },
+    {
+        "id": 6,
+        "name": "Кастомная программа для скриптов",
+        "description": "Кастомная версия Game Guardian, которая поддерживает скрипты SimpleDLC",
+        "version": "777",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RyaF8JVjTr3GDBzf8_svUdkxsu-7ODMKCQc8T774s7BJG6Fnpz2lslw&s=10",
+        "link": "https://t.me/SimpleDLC/352"
     }
 ] 

@@ -1,39 +1,439 @@
-
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimpleDLC - Каталог игр</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-    <header class="header">
-        <div class="logo">
-            <h1 class="logo-text">SimpleDLC</h1>
+<!-- Telegram Subscription Check Modal -->
+<div id="subscriptionModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🔒 Требуется подписка</h2>
+            <button class="modal-close" onclick="closeModal()">×</button>
         </div>
-        <div class="theme-switcher">
-            <span class="theme-label">Тема</span>
-            <label class="switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider"></span> 
-            </label>
+        <div class="modal-body">
+            <p>Для доступа к играм необходимо подписаться на наш Telegram-канал:</p>
+            
+            <div class="telegram-widget">
+                <a href="https://t.me/SimpleDLC" target="_blank" class="telegram-channel">
+                    <i class="fab fa-telegram"></i>
+                    <span>@SimpleDLC</span>
+                </a>
+                <div id="telegramWidget"></div>
+            </div>
+            
+            <div class="verification-section">
+                <p>После подписки нажмите кнопку ниже для проверки:</p>
+                <button id="verifySubscription" class="verify-btn" onclick="checkSubscription()">
+                    <i class="fas fa-sync-alt"></i> Проверить подписку
+                </button>
+            </div>
+            
+            <div class="hint">
+                <p><strong>Как проверить:</strong></p>
+                <ol>
+                    <li>Нажмите на ссылку канала выше</li>
+                    <li>Нажмите "Подписаться" в Telegram</li>
+                    <li>Вернитесь на эту страницу</li>
+                    <li>Нажмите "Проверить подписку"</li>
+                </ol>
+            </div>
         </div>
-    </header>
+    </div>
+</div>
 
-    <section class="search-section">
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
-        </div>      
-    </section>
+<div id="modalOverlay" class="modal-overlay" style="display: none;"></div>
 
-    <main class="main-content">
-        <div class="games-container" id="gamesContainer">
-            <div class="loading">Загрузка игр...</div>
-        </div>
-    </main>
+<style>
+    /* Modal Styles */
+    .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 15px;
+        z-index: 2000;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    body.dark-theme .modal {
+        background: #2d2d2d;
+        color: white;
+    }
+    
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 1999;
+    }
+    
+    .modal-header {
+        padding: 20px;
+        border-bottom: 2px solid var(--purple);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .modal-header h2 {
+        color: var(--purple);
+        font-size: 1.5rem;
+    }
+    
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #666;
+        transition: var(--transition);
+    }
+    
+    .modal-close:hover {
+        color: var(--purple);
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .telegram-widget {
+        text-align: center;
+        margin: 20px 0;
+        padding: 20px;
+        background: rgba(138, 43, 226, 0.1);
+        border-radius: 10px;
+    }
+    
+    .telegram-channel {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px 30px;
+        background: #0088cc;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        transition: var(--transition);
+    }
+    
+    .telegram-channel:hover {
+        background: #0077b3;
+        transform: translateY(-2px);
+    }
+    
+    .telegram-channel i {
+        font-size: 1.5rem;
+    }
+    
+    .verification-section {
+        text-align: center;
+        margin: 25px 0;
+        padding: 20px;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    
+    body.dark-theme .verification-section {
+        border-color: #444;
+    }
+    
+    .verify-btn {
+        background: var(--purple);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .verify-btn:hover {
+        background: var(--purple-light);
+        transform: translateY(-2px);
+    }
+    
+    .verify-btn:active {
+        transform: translateY(0);
+    }
+    
+    .hint {
+        background: rgba(0,0,0,0.05);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+    
+    body.dark-theme .hint {
+        background: rgba(255,255,255,0.05);
+    }
+    
+    .hint ol {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+    
+    .hint li {
+        margin-bottom: 8px;
+    }
+    
+    /* Success Message */
+    .success-message {
+        color: #28a745;
+        text-align: center;
+        padding: 15px;
+        background: rgba(40, 167, 69, 0.1);
+        border-radius: 10px;
+        margin: 15px 0;
+        display: none;
+    }
+    
+    /* Disable content when modal is open */
+    body.modal-open {
+        overflow: hidden;
+    }
+    
+    body.modal-open .main-content {
+        filter: blur(5px);
+        pointer-events: none;
+    }
+    
+    @media (max-width: 480px) {
+        .modal {
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .telegram-channel {
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+        
+        .verify-btn {
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+    }
+</style>
 
-    <script src="script/script.js"></script>
-</body>
-</html>
+<script>
+// Telegram Bot Configuration
+const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'; // Замените на токен вашего бота
+const CHANNEL_USERNAME = '@SimpleDLC'; // Ваш канал
+const CHAT_ID = 'YOUR_CHANNEL_ID_HERE'; // ID вашего канала
+
+// Check subscription status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Проверяем, есть ли сохраненная проверка подписки
+    const subscriptionChecked = localStorage.getItem('subscriptionChecked');
+    const subscriptionValidUntil = localStorage.getItem('subscriptionValidUntil');
+    
+    // Если проверка была выполнена и срок еще не истек, пропускаем
+    if (subscriptionChecked === 'true' && subscriptionValidUntil) {
+        const expiryDate = new Date(subscriptionValidUntil);
+        if (expiryDate > new Date()) {
+            console.log('Подписка уже проверена, срок действия до:', expiryDate);
+            return;
+        }
+    }
+    
+    // Если нет валидной проверки - показываем модальное окно
+    setTimeout(() => {
+        showSubscriptionModal();
+    }, 1000); // Задержка 1 секунда для загрузки контента
+});
+
+// Show subscription modal
+function showSubscriptionModal() {
+    document.getElementById('subscriptionModal').style.display = 'block';
+    document.getElementById('modalOverlay').style.display = 'block';
+    document.body.classList.add('modal-open');
+    
+    // Загружаем Telegram Widget для отображения канала
+    loadTelegramWidget();
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('subscriptionModal').style.display = 'none';
+    document.getElementById('modalOverlay').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+// Load Telegram Widget
+function loadTelegramWidget() {
+    const widgetContainer = document.getElementById('telegramWidget');
+    
+    // Очищаем контейнер
+    widgetContainer.innerHTML = '';
+    
+    // Создаем iframe с Telegram Widget
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://t.me/${CHANNEL_USERNAME.replace('@', '')}?embed=true`;
+    iframe.width = '100%';
+    iframe.height = '300';
+    iframe.frameBorder = '0';
+    iframe.style.borderRadius = '10px';
+    iframe.style.marginTop = '15px';
+    
+    widgetContainer.appendChild(iframe);
+}
+
+// Check subscription status
+async function checkSubscription() {
+    const verifyBtn = document.getElementById('verifySubscription');
+    const originalText = verifyBtn.innerHTML;
+    
+    // Показываем индикатор загрузки
+    verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Проверяем...';
+    verifyBtn.disabled = true;
+    
+    try {
+        // Метод 1: Используем Telegram Widget API (более простой, но менее надежный)
+        const isSubscribed = await checkViaTelegramAPI();
+        
+        // Метод 2: Альтернативный метод через бота (требует настройки бота)
+        // const isSubscribed = await checkViaBotAPI();
+        
+        if (isSubscribed) {
+            // Сохраняем статус подписки на 24 часа
+            const expiryDate = new Date();
+            expiryDate.setHours(expiryDate.getHours() + 24);
+            
+            localStorage.setItem('subscriptionChecked', 'true');
+            localStorage.setItem('subscriptionValidUntil', expiryDate.toISOString());
+            
+            // Показываем сообщение об успехе
+            showSuccessMessage();
+            
+            // Закрываем модальное окно через 2 секунды
+            setTimeout(() => {
+                closeModal();
+            }, 2000);
+        } else {
+            alert('❌ Вы еще не подписаны на канал. Пожалуйста, подпишитесь и попробуйте снова.');
+            verifyBtn.innerHTML = originalText;
+            verifyBtn.disabled = false;
+        }
+    } catch (error) {
+        console.error('Ошибка проверки подписки:', error);
+        alert('⚠️ Не удалось проверить подписку. Пожалуйста, убедитесь что вы подписаны и попробуйте снова.');
+        verifyBtn.innerHTML = originalText;
+        verifyBtn.disabled = false;
+    }
+}
+
+// Method 1: Check via Telegram Widget API (simpler)
+async function checkViaTelegramAPI() {
+    // Этот метод использует Telegram Widget для проверки
+    // Он менее надежен, но не требует бота
+    
+    return new Promise((resolve) => {
+        // Создаем временный iframe для проверки
+        const tempIframe = document.createElement('iframe');
+        tempIframe.style.display = 'none';
+        tempIframe.src = `https://t.me/${CHANNEL_USERNAME.replace('@', '')}`;
+        
+        tempIframe.onload = function() {
+            // Попытка определить подписку по содержимому iframe
+            try {
+                const iframeDoc = tempIframe.contentDocument || tempIframe.contentWindow.document;
+                const bodyText = iframeDoc.body.innerText || '';
+                
+                // Проверяем наличие текста, который показывает для неподписанных
+                const isSubscribed = !bodyText.includes('Join Channel') && 
+                                     !bodyText.includes('Присоединиться') &&
+                                     !bodyText.includes('Preview channel');
+                
+                document.body.removeChild(tempIframe);
+                resolve(isSubscribed);
+            } catch (e) {
+                // Если не удалось проверить через iframe, используем fallback
+                document.body.removeChild(tempIframe);
+                resolve(checkViaFallback());
+            }
+        };
+        
+        document.body.appendChild(tempIframe);
+        
+        // Таймаут на случай если iframe не загрузится
+        setTimeout(() => {
+            if (document.body.contains(tempIframe)) {
+                document.body.removeChild(tempIframe);
+            }
+            resolve(checkViaFallback());
+        }, 5000);
+    });
+}
+
+// Method 2: Check via Bot API (more reliable but requires bot setup)
+async function checkViaBotAPI() {
+    if (!BOT_TOKEN || BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
+        console.warn('Bot token не настроен, используем fallback метод');
+        return checkViaFallback();
+    }
+    
+    try {
+        // Здесь должен быть запрос к вашему серверу, который проверит подписку через Bot API
+        // Пример: const response = await fetch(`/api/check-subscription?userId=${userId}`);
+        // return response.ok;
+        
+        // Так как у нас нет сервера, используем fallback
+        return checkViaFallback();
+    } catch (error) {
+        console.error('Bot API error:', error);
+        return checkViaFallback();
+    }
+}
+
+// Fallback method - asks user to confirm
+function checkViaFallback() {
+    return new Promise((resolve) => {
+        const userConfirmed = confirm(
+            '⚠️ Автоматическая проверка недоступна.\n\n' +
+            'Убедитесь что вы подписаны на канал @SimpleDLC.\n\n' +
+            'Нажмите OK если вы подписаны, или Отмена если нет.'
+        );
+        resolve(userConfirmed);
+    });
+}
+
+// Show success message
+function showSuccessMessage() {
+    const modalBody = document.querySelector('.modal-body');
+    
+    const successMsg = document.createElement('div');
+    successMsg.className = 'success-message';
+    successMsg.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <h3>✅ Подписка подтверждена!</h3>
+        <p>Доступ к играм открыт на 24 часа</p>
+    `;
+    successMsg.style.display = 'block';
+    
+    modalBody.insertBefore(successMsg, modalBody.firstChild);
+    
+    const verifyBtn = document.getElementById('verifySubscription');
+    verifyBtn.innerHTML = '<i class="fas fa-check"></i> Подписка подтверждена!';
+    verifyBtn.style.background = '#28a745';
+}
+
+// Force subscription check (можно вызвать из консоли или добавить кнопку)
+window.forceSubscriptionCheck = function() {
+    localStorage.removeItem('subscriptionChecked');
+    localStorage.removeItem('subscriptionValidUntil');
+    showSubscriptionModal();
+};
+</script>

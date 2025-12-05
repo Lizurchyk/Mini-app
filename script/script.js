@@ -1,135 +1,114 @@
-// Данные игр
-let gamesData = [];
-
-// ССЫЛКА НА ВАШ JSON ФАЙЛ - ЗАМЕНИТЕ НА СВОЮ!
-const GAMES_JSON_URL = 'https://raw.githubusercontent.com/Lizurchyk/Mini-app/refs/heads/main/games.json'; // ЗАМЕНИТЕ ЭТУ ССЫЛКУ
-
-// Загрузка данных игр из JSON
-async function loadGames() {
-    const container = document.getElementById('gamesContainer');
+// Конфигурация приложения
+const CONFIG = {
+    // Основной канал (открывается при клике на лого)
+    MAIN_CHANNEL: {
+        name: "SimpleDLC",
+        username: "simpledlc", // Без @
+        photo: "https://img.icons8.com/color/96/000000/controller.png", // Фото канала
+        title: "SimpleDLC" // Название в лого
+    },
     
-    try {
-        container.innerHTML = '<div class="loading">Загрузка игр...</div>';
-        
-        console.log('Загрузка данных из:', GAMES_JSON_URL);
-        const response = await fetch(GAMES_JSON_URL);
-        
-        if (!response.ok) {
-            throw new Error(`Ошибка HTTP: ${response.status}`);
+    // Каналы для подписки (указываются отдельно)
+    SUBSCRIPTION_CHANNELS: [
+        {
+            name: "@simpledlc",
+            username: "simpledlc",
+            description: "Основной канал с играми"
+        },
+        {
+            name: "@gameupdates",
+            username: "gameupdates", 
+            description: "Обновления игр"
         }
-        
-        gamesData = await response.json();
-        console.log('Данные успешно загружены:', gamesData);
-        displayGames(gamesData);
-        
-    } catch (error) {
-        console.error('Ошибка загрузки:', error);
-        container.innerHTML = `
-            <div class="error">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Ошибка загрузки данных</h3>
-                <p>${error.message}</p>
-                <p style="margin-top: 10px; font-size: 14px;">
-                    Проверьте ссылку на JSON файл
-                </p>
-            </div>
-        `;
-    }
-}
-
-// Отображение карточек игр
-function displayGames(games) {
-    const container = document.getElementById('gamesContainer');
+    ],
     
-    if (!games || games.length === 0) {
-        container.innerHTML = '<div class="no-results">Игры не найдены</div>';
-        return;
-    }
-
-    container.innerHTML = games.map(game => `
-        <div class="game-card" data-id="${game.id}">
-            <img src="${game.image}" alt="${game.name}" class="game-image" 
-                 onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=250&fit=crop'">
-            <div class="game-info">
-                <h3 class="game-title">${game.name}</h3>
-                <div class="game-description">${formatDescription(game.description)}</div>
-                <div class="game-meta">
-                    <span class="game-version">Версия: ${game.version}</span>
-                </div>
-                <a href="${game.link}" class="game-link" target="_blank">Установить</a>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Функция для форматирования описания
-function formatDescription(description) {
-    if (Array.isArray(description)) {
-        return description.join('<br><br>');
-    }
-    return description.replace(/\n/g, '<br>');
-}
-
-// Поиск игр
-function searchGames(query) {
-    const searchTerm = query.toLowerCase().trim();
+    // Токен бота для проверки подписки
+    BOT_TOKEN: '5718405917:AAEtLH8r_FEh98utTX7-1iSRBBifbMJ0REY',
     
-    if (!searchTerm) {
-        displayGames(gamesData);
-        return;
-    }
-
-    const filteredGames = gamesData.filter(game => 
-        game.name.toLowerCase().includes(searchTerm) ||
-        game.description.toLowerCase().includes(searchTerm)
-    );
-
-    displayGames(filteredGames);
-}
-
-// Управление темой
-function setupTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-
-    // Загрузка сохраненной темы
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-theme');
-        themeToggle.checked = true;
-    }
-
-    // Переключение темы
-    themeToggle.addEventListener('change', function() {
-        if (this.checked) {
-            body.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            body.classList.remove('dark-theme');
-            localStorage.setItem('theme', 'light');
+    // Премиум пользователи
+    PREMIUM_USERS: {
+        '1439379837': {
+            status: 'premium',
+            expires: '2025-12-31'
         }
-    });
-}
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', function() {
-    setupTheme();
-    loadGames();
-
-    // Поиск
-    const searchInput = document.getElementById('searchInput');
-    let searchTimeout;
+    },
     
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            searchGames(this.value);
-        }, 300);
-    });
-
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            searchGames(this.value);
+    // Игры
+    GAMES: [
+        {
+            id: 1,
+            name: "Minecraft",
+            price: 1999,
+            oldPrice: 2499,
+            image: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2025/02/minecraft-key-art-feature.jpg",
+            description: "Песочница с кубической графикой",
+            version: "1.20",
+            category: "sandbox",
+            tags: ["популярная", "песочница"],
+            downloadLinks: {
+                free: "https://drive.google.com/minecraft-free",
+                premium: "https://drive.google.com/minecraft-premium"
+            }
+        },
+        {
+            id: 2,
+            name: "GTA V",
+            price: 2999,
+            oldPrice: 3499,
+            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2xuz.jpg",
+            description: "Криминальная сага в Лос-Сантосе",
+            version: "Premium",
+            category: "action",
+            tags: ["экшен", "открытый мир"],
+            downloadLinks: {
+                free: "https://drive.google.com/gtav-free",
+                premium: "https://drive.google.com/gtav-premium"
+            }
+        },
+        {
+            id: 3,
+            name: "CS:GO",
+            price: 0,
+            oldPrice: 1499,
+            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co49w5.jpg",
+            description: "Тактический шутер",
+            version: "Free",
+            category: "fps",
+            tags: ["бесплатная", "шутер"],
+            downloadLinks: {
+                free: "https://store.steampowered.com/app/730/CSGO/",
+                premium: "https://drive.google.com/csgo-premium"
+            }
+        },
+        {
+            id: 4,
+            name: "Cyberpunk 2077",
+            price: 3999,
+            oldPrice: null,
+            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2g0y.jpg",
+            description: "Ролевая игра в будущем",
+            version: "2.0",
+            category: "rpg",
+            tags: ["RPG", "футуристика"],
+            downloadLinks: {
+                free: "https://drive.google.com/cyberpunk-free",
+                premium: "https://drive.google.com/cyberpunk-premium"
+            }
+        },
+        {
+            id: 5,
+            name: "The Witcher 3",
+            price: 1499,
+            oldPrice: 2999,
+            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1r7c.jpg",
+            description: "Фэнтези РПГ про ведьмака",
+            version: "Complete",
+            category: "rpg",
+            tags: ["фэнтези", "RPG"],
+            downloadLinks: {
+                free: "https://drive.google.com/witcher-free",
+                premium: "https://drive.google.com/witcher-premium"
+            }
         }
-    });
-});
+    ]
+};

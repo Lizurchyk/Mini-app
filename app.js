@@ -7,6 +7,16 @@ tg.ready();
 let currentUserId = null;
 let unsubscribedChannels = [];
 
+// Функция форматирования текста с переносами строк
+function formatTextWithLineBreaks(text) {
+    if (!text) return '';
+    // Заменяем \n на HTML тег <br>
+    const formattedText = text
+        .replace(/\\n/g, '<br>')  // Для сохраненных \n
+        .replace(/\n/g, '<br>');  // Для новых переносов
+    return formattedText;
+}
+
 // Инициализация логотипа
 function initLogo() {
     const logoImg = document.getElementById('logoImg');
@@ -184,7 +194,7 @@ async function recheckSubscription() {
     }
 }
 
-// Создание карточки игры (без цены)
+// Создание карточки игры (без цены) с поддержкой переносов строк
 function createGameCard(game, isPremium) {
     // Получаем ссылку в зависимости от статуса пользователя
     const downloadLink = isPremium ? 
@@ -197,13 +207,16 @@ function createGameCard(game, isPremium) {
         return '';
     }
     
+    // Форматируем описание с поддержкой переносов строк
+    const formattedDescription = formatTextWithLineBreaks(game.description);
+    
     return `
         <div class="card">
             <img src="${game.img}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Нет+изображения'">
             <div class="card-text">
                 <p1>${game.name}</p1>
                 <div class="product-version">${game.version}</div>
-                <p2>${game.description}</p2>
+                <p2>${formattedDescription}</p2>
             </div>
             <button onclick="downloadGame('${downloadLink}', '${game.name}')">
                 📥 Скачать
@@ -249,11 +262,18 @@ function searchGames() {
         return;
     }
     
-    const filtered = CONFIG.GAMES.filter(game => 
-        (game.name && game.name.toLowerCase().includes(searchTerm)) ||
-        (game.description && game.description.toLowerCase().includes(searchTerm)) ||
-        (game.version && game.version.toLowerCase().includes(searchTerm))
-    );
+    // Ищем по имени, описанию и версии (без учета HTML тегов для поиска)
+    const filtered = CONFIG.GAMES.filter(game => {
+        // Для поиска используем чистый текст без HTML
+        const cleanDescription = game.description ? 
+            game.description.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') : '';
+        
+        return (
+            (game.name && game.name.toLowerCase().includes(searchTerm)) ||
+            (cleanDescription && cleanDescription.toLowerCase().includes(searchTerm)) ||
+            (game.version && game.version.toLowerCase().includes(searchTerm))
+        );
+    });
     
     const container = document.getElementById('results_search');
     

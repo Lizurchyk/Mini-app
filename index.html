@@ -3,360 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimpleDLC - Каталог игр</title>
+    <title>SimpleDLC Games</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        /* Стили для баннера подписки */
-        .subscription-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            backdrop-filter: blur(5px);
-        }
-        
-        .subscription-modal {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: modalAppear 0.5s ease-out;
-        }
-        
-        @keyframes modalAppear {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
-        .subscription-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #ff4757, #ff6b81);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 32px;
-        }
-        
-        .subscription-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .subscription-message {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        
-        .channel-name {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: 600;
-            margin: 10px 0;
-            font-size: 18px;
-        }
-        
-        .subscription-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 25px;
-        }
-        
-        .subscription-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex: 1;
-        }
-        
-        .btn-open {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-        
-        .btn-open:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-check {
-            background: #f8f9fa;
-            color: #667eea;
-            border: 2px solid #e9ecef;
-        }
-        
-        .btn-check:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-        }
-        
-        .subscription-note {
-            font-size: 14px;
-            color: #888;
-            margin-top: 20px;
-            line-height: 1.4;
-        }
-        
-        .hidden {
-            display: none !important;
-        }
-        
-        .loader-small {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .subscription-status {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-            min-height: 20px;
-        }
-        
-        .status-success {
-            color: #2ed573;
-            font-weight: 600;
-        }
-        
-        .status-error {
-            color: #ff4757;
-            font-weight: 600;
-        }
-    </style>
 </head>
 <body>
-    <!-- Баннер проверки подписки -->
-    <div id="subscriptionOverlay" class="subscription-overlay">
-        <div class="subscription-modal">
-            <div class="subscription-icon">🔒</div>
-            <div class="subscription-title">Требуется подписка</div>
-            <p class="subscription-message">
-                Для доступа к каталогу игр необходимо быть подписчиком нашего канала
-            </p>
-            <div class="channel-name">@SimpleDLC</div>
-            
-            <div class="subscription-status" id="subscriptionStatus">
-                Проверяем ваш статус...
-            </div>
-            
-            <div class="subscription-buttons">
-                <button onclick="openChannel()" class="subscription-btn btn-open">
-                    <i class="fas fa-external-link-alt"></i> Открыть канал
-                </button>
-                <button onclick="checkSubscription()" class="subscription-btn btn-check" id="checkBtn">
-                    <i class="fas fa-sync-alt"></i> Проверить
-                </button>
-            </div>
-            
-            <p class="subscription-note">
-                После подписки нажмите кнопку "Проверить" для обновления статуса
-            </p>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-img" id="logoImg"></div>
+            <span>SimpleDLC</span>
+        </div>
+        <div id="userStatus" class="user-status user">User</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Search -->
+        <div class="search-container">
+            <input type="text" 
+                   id="search" 
+                   class="input" 
+                   placeholder="🔍 Поиск игр..." 
+                   oninput="searchGames()">
+        </div>
+
+        <!-- Results -->
+        <div id="results_search" class="cards-container">
+            <div class="loading">Загрузка...</div>
         </div>
     </div>
 
-    <!-- Основной контент сайта -->
-    <header class="header">
-        <div class="logo">
-            <h1 class="logo-text">SimpleDLC</h1>
-        </div>
-        <div class="theme-switcher">
-            <span class="theme-label">Тема</span>
-            <label class="switch">
-                <input type="checkbox" id="themeToggle">
-                <span class="slider"></span> 
-            </label>
-        </div>
-    </header>
+    <!-- Subscription Screen (будет показан при необходимости) -->
 
-    <section class="search-section">
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" placeholder="Поиск игр..." id="searchInput"> 
-        </div>      
-    </section>
-
-    <main class="main-content">
-        <div class="games-container" id="gamesContainer">
-            <div class="loading">Загрузка игр...</div>
-        </div>
-    </main>
-
-    <script>
-        // Конфигурация
-        const BOT_TOKEN = '5718405917:AAEtLH8r_FEh98utTX7-1iSRBBifbMJ0REY'; // Замените на ваш токен
-        const CHANNEL_USERNAME = '@SimpleDLC';
-        
-        let telegramUser = null;
-        let isSubscribed = false;
-        let checkInProgress = false;
-        
-        // Инициализация Telegram Web App
-        function initTelegram() {
-            if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                telegramUser = tg.initDataUnsafe?.user;
-                tg.expand();
-            } else {
-                // Если открыто не в Telegram, показываем сообщение
-                document.getElementById('subscriptionStatus').innerHTML = 
-                    '<span class="status-error">Откройте через Telegram бота</span>';
-                return;
-            }
-            
-            // Начинаем проверку подписки
-            checkSubscription();
-            
-            // Автопроверка каждые 30 секунд
-            setInterval(checkSubscription, 30000);
-        }
-        
-        // Проверка подписки
-        async function checkSubscription() {
-            if (checkInProgress) return;
-            checkInProgress = true;
-            
-            const statusElement = document.getElementById('subscriptionStatus');
-            const checkBtn = document.getElementById('checkBtn');
-            
-            // Показываем индикатор загрузки
-            checkBtn.innerHTML = '<span class="loader-small"></span>';
-            checkBtn.disabled = true;
-            
-            if (!telegramUser) {
-                statusElement.innerHTML = '<span class="status-error">Не удалось получить данные пользователя</span>';
-                checkBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Повторить';
-                checkBtn.disabled = false;
-                checkInProgress = false;
-                return;
-            }
-            
-            try {
-                const response = await fetch(
-                    `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            chat_id: CHANNEL_USERNAME,
-                            user_id: telegramUser.id
-                        })
-                    }
-                );
-                
-                const data = await response.json();
-                
-                if (data.ok) {
-                    const status = data.result.status;
-                    const subscribedStatuses = ['creator', 'administrator', 'member', 'restricted'];
-                    
-                    if (subscribedStatuses.includes(status)) {
-                        // Пользователь подписан
-                        isSubscribed = true;
-                        statusElement.innerHTML = '<span class="status-success">✅ Вы подписаны!</span>';
-                        
-                        // Через 1.5 секунды скрываем баннер и показываем контент
-                        setTimeout(() => {
-                            document.getElementById('subscriptionOverlay').classList.add('hidden');
-                            loadGames(); // Загружаем игры
-                        }, 1500);
-                        
-                    } else {
-                        // Не подписан
-                        isSubscribed = false;
-                        statusElement.innerHTML = '<span class="status-error">❌ Вы не подписаны на канал</span>';
-                    }
-                } else {
-                    statusElement.innerHTML = `<span class="status-error">Ошибка: ${data.description || 'Неизвестная ошибка'}</span>`;
-                }
-            } catch (error) {
-                console.error('Error checking subscription:', error);
-                statusElement.innerHTML = '<span class="status-error">Ошибка соединения</span>';
-            }
-            
-            // Восстанавливаем кнопку
-            checkBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Проверить';
-            checkBtn.disabled = false;
-            checkInProgress = false;
-        }
-        
-        // Открыть канал
-        function openChannel() {
-            if (typeof window.Telegram !== 'undefined' && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink) {
-                window.Telegram.WebApp.openTelegramLink(`https://t.me/${CHANNEL_USERNAME.substring(1)}`);
-            } else {
-                window.open(`https://t.me/${CHANNEL_USERNAME.substring(1)}`, '_blank');
-            }
-        }
-        
-        // Функция загрузки игр (заглушка)
-        function loadGames() {
-            console.log('Загрузка игр...');
-            // Здесь будет ваша логика загрузки игр из script.js
-        }
-        
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            // Сначала инициализируем проверку подписки
-            initTelegram();
-            
-            // Затем загружаем остальные скрипты
-            if (typeof loadGames === 'function') {
-                // Если функция loadGames уже определена в script.js
-                loadGames();
-            } else {
-                // Загружаем основной скрипт
-                const script = document.createElement('script');
-                script.src = 'script/script.js';
-                script.onload = function() {
-                    console.log('Основной скрипт загружен');
-                };
-                document.body.appendChild(script);
-            }
-        });
-    </script>
+    <!-- Telegram SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <script src="script/script.js"></script>
+    <!-- Configuration -->
+    <script src="config.js"></script>
+    
+    <!-- Main App -->
+    <script src="app.js"></script>
 </body>
 </html>

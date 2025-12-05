@@ -184,22 +184,29 @@ async function recheckSubscription() {
     }
 }
 
-// Создание карточки игры
+// Создание карточки игры (обновленная с новыми полями)
 function createGameCard(game, isPremium) {
-    const downloadLink = isPremium ? game.downloadLinks.premium : game.downloadLinks.free;
-    const priceDisplay = game.price === 0 ? 'Бесплатно' : `${game.price}₽`;
-    const oldPriceDisplay = game.oldPrice ? `<span class="old-price">${game.oldPrice}₽</span>` : '';
+    // Получаем ссылку в зависимости от статуса пользователя
+    const downloadLink = isPremium ? 
+        (game.link?.premium || game.link) : 
+        (game.link?.user || game.link);
+    
+    // Проверяем наличие обязательных полей
+    if (!game.name || !game.description || !game.version || !game.img || !downloadLink) {
+        console.error('Недостаточно данных для создания карточки:', game);
+        return '';
+    }
     
     return `
         <div class="card">
-            <img src="${game.image}" alt="${game.name}">
+            <img src="${game.img}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Нет+изображения'">
             <div class="card-text">
                 <p1>${game.name}</p1>
                 <div class="product-version">${game.version}</div>
                 <p2>${game.description}</p2>
-                <p>${priceDisplay} ${oldPriceDisplay}</p>
+                <p>${game.price ? `${game.price}₽` : 'Бесплатно'}</p>
             </div>
-            <button onclick="downloadGame('${downloadLink}', ${game.id})">
+            <button onclick="downloadGame('${downloadLink}', '${game.name}')">
                 📥 Скачать
             </button>
         </div>
@@ -214,7 +221,18 @@ function showGames(isPremium) {
     // Показываем поиск
     searchContainer.style.display = 'block';
     
-    const cards = CONFIG.GAMES.map(game => createGameCard(game, isPremium)).join('');
+    // Фильтруем игры, у которых есть все необходимые данные
+    const validGames = CONFIG.GAMES.filter(game => 
+        game.name && game.description && game.version && game.img && 
+        (game.link || (game.link?.user && game.link?.premium))
+    );
+    
+    if (validGames.length === 0) {
+        container.innerHTML = '<div class="no-results">Нет доступных игр</div>';
+        return;
+    }
+    
+    const cards = validGames.map(game => createGameCard(game, isPremium)).join('');
     container.innerHTML = `<div class="cards-container">${cards}</div>`;
     
     // Обновляем статус пользователя
@@ -233,9 +251,9 @@ function searchGames() {
     }
     
     const filtered = CONFIG.GAMES.filter(game => 
-        game.name.toLowerCase().includes(searchTerm) ||
-        game.description.toLowerCase().includes(searchTerm) ||
-        game.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+        (game.name && game.name.toLowerCase().includes(searchTerm)) ||
+        (game.description && game.description.toLowerCase().includes(searchTerm)) ||
+        (game.version && game.version.toLowerCase().includes(searchTerm))
     );
     
     const container = document.getElementById('results_search');
@@ -257,9 +275,14 @@ function clearSearch() {
 }
 
 // Скачивание игры
-function downloadGame(url, gameId) {
+function downloadGame(url, gameName) {
+    if (!url) {
+        tg.showAlert('Ссылка для скачивания не найдена');
+        return;
+    }
+    
     tg.openLink(url);
-    console.log(`Скачана игра ID: ${gameId}`);
+    console.log(`Скачана игра: ${gameName}`);
 }
 
 // Основная проверка доступа

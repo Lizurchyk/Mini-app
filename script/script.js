@@ -6,7 +6,7 @@ const CONFIG = {
     MAIN_CHANNEL: {
         name: "SimpleDLC",
         username: "simpledlc",
-        photo: "https://img.icons8.com/color/96/000000/controller.png",
+        photo: "https://img.telemetr.io/c/2DilQY/5350323619592532233?ty=l",
         title: "SimpleDLC"
     },
     

@@ -184,7 +184,7 @@ async function recheckSubscription() {
     }
 }
 
-// Создание карточки игры (обновленная с новыми полями)
+// Создание карточки игры (без цены)
 function createGameCard(game, isPremium) {
     // Получаем ссылку в зависимости от статуса пользователя
     const downloadLink = isPremium ? 
@@ -204,7 +204,6 @@ function createGameCard(game, isPremium) {
                 <p1>${game.name}</p1>
                 <div class="product-version">${game.version}</div>
                 <p2>${game.description}</p2>
-                <p>${game.price ? `${game.price}₽` : 'Бесплатно'}</p>
             </div>
             <button onclick="downloadGame('${downloadLink}', '${game.name}')">
                 📥 Скачать

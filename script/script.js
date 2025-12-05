@@ -75,5 +75,16 @@ const CONFIG = {
             }
 
         },
+        {
+        name: "[Mod] Roblox",
+        description: "Roblox – это невероятная виртуальная вселенная для творчества, общения с друзьями и воплощения всех ваших фантазий. Присоединитесь к миллионам других людей и погрузитесь в невероятное многообразие миров, создаваемых мировым сообществом!\n\n\nОсобенности: Мод-меню",
+        version: "2.690.721",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTHmNKSghjjLSRNof-U9A_pVgBOfMSORyQv72rNuXbww&s=10",
+            link: {
+                user: "https://go.linkify.ru/2EMZ",
+                premium: "https://www.mediafire.com/file/ys0x74t9uk1rmt8/Roblox-2.690.721-Menu_20cheatsM.apk/file"
+            }
+
+        },
     ]
 };

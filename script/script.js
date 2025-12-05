@@ -1,14 +1,66 @@
+[
+    {
+        "id": 1,
+        "name": "[Script] Car Parking Multiplayer",
+        "description": "Функции: \nНакрутка валют, автоматическая победа в гонках, накрутка статистики, купить любую машину, хром, получить в16, сделать машину полицейской и многое другое\n\nКлюч: \n  tg: @SimpleDLC",
+        "version": "4.9.5",
+        "image": "https://f4.bcbits.com/img/a1011463993_16.jpg",
+        "link": "https://www.mediafire.com/file/3381rhnr6fqoqvq/%255BLoader%255D%253DCarParking.SimpleDLC/file"
+    },
+    {
+        "id": 2,
+        "name": "[Script] Polywar",
+        "description": "Функции:\nАим, режим бога, бесконечные патроны и многое другое\n\nКлюч:\n     tg: @SimpleDLC",
+        "version": "2.5.0",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRIwqEKb8_J6veMM9Y-vRPaX9dtzZgZhUYF4zUv0WjQtwfOCE0p16TcfDL&s=10",
+        "link": "https://www.mediafire.com/file/zyd5g90zjygso7s/%255BLoader%255D%253DPolywar.SimpleDLC/file"
+    },
+    {
+        "id": 3,
+        "name": "[Mod] Tomb of the mask",
+        "description": "Интересная игра с простым геймплеем. Поможет убить время, во время скучного урока или когда нечего делать\n\nФункции:\n• Куплен премиум\n• Отсутствует реклама\n• Двойные монеты\n• Разблокированы все скины\n• Бесконечные сундуки",
+        "version": "3.0.1",
+        "image": "https://play-lh.googleusercontent.com/ATGr-U4JBK2VjFzKGK9eMMkrDxJaazadOUoz_7Yl0U5NrWSFcFUzEtNurWXYzVWc8uOO",
+        "link": "https://t.me/SimpleDLC/377"
+    },
+    {
+        "id": 4,
+        "name": "[Mod] Monument Valley",
+        "description": "Классная головоломка, для прохождения который, в некоторых местах, придется думать не стандартно\n\nОсобенности:\n• Куплена из Google Play",
+        "version": "3.10.114",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5RyaF8JVjTr3GDBzf8_svUdkxsu-7ODMKCQc8T774s7BJG6Fnpz2lslw&s=10",
+        "link": "https://t.me/SimpleDLC/384"
+    },
+    {
+        "id": 5,
+        "name": "[Script] Counter Flame",
+        "description": "Интересный шутер, подобии CS 2 на телефоны. В игре доступны: аккаунты, инвентари, к/д, онлайн\n\nФункции:\n• Аим\n• Режим бога\n• Бесконечные патроны\n• Отключение отдачи\n• Быстрая стрельба \n• Дамаг хак\n• Заморозить игроков\n• Магазин хак\n• Флай",
+        "version": "1.04",
+        "image": "https://i.ibb.co/gFRQZhXk/IMG-20251128-090350-299.jpg",
+        "link": "https://www.mediafire.com/file/xlfydrj8m02qrrk/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
+    },
+    {
+        "id": 6,
+        "name": "Кастомная программа для скриптов",
+        "description": "Кастомная версия Game Guardian, которая поддерживает скрипты SimpleDLC",
+        "version": "777",
+        "image": "https://image.pngaaa.com/813/5544813-middle.png",
+        "link": "https://t.me/SimpleDLC/352"
+    }
+] 
+
+
 // Конфигурация приложения
 const CONFIG = {
     // Основной канал (открывается при клике на лого)
     MAIN_CHANNEL: {
         name: "SimpleDLC",
-        username: "simpledlc", // Без @
-        photo: "https://img.icons8.com/color/96/000000/controller.png", // Фото канала
-        title: "SimpleDLC" // Название в лого
+        username: "simpledlc",
+        photo: "https://img.icons8.com/color/96/000000/controller.png",
+        title: "SimpleDLC"
     },
     
-    // Каналы для подписки (указываются отдельно)
+    // Каналы для подписки
     SUBSCRIPTION_CHANNELS: [
         {
             name: "@simpledlc",
@@ -33,82 +85,49 @@ const CONFIG = {
         }
     },
     
-    // Игры
+    // Игры (без поля price)
     GAMES: [
         {
-            id: 1,
-            name: "Minecraft",
-            price: 1999,
-            oldPrice: 2499,
-            image: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2025/02/minecraft-key-art-feature.jpg",
-            description: "Песочница с кубической графикой",
-            version: "1.20",
-            category: "sandbox",
-            tags: ["популярная", "песочница"],
-            downloadLinks: {
-                free: "https://drive.google.com/minecraft-free",
-                premium: "https://drive.google.com/minecraft-premium"
+            name: "[Script] Car Parking Multiplayer",
+            description: "Функции: \nНакрутка валют, автоматическая победа в гонках, накрутка статистики, купить любую машину, хром, получить в16, сделать машину полицейской и многое другое\n\nКлюч: \n  tg: @SimpleDLC",
+            version: "4.9.5",
+            img: "https://f4.bcbits.com/img/a1011463993_16.jpg",
+            link: {
+                user: "         ",
+                premium: "https://www.mediafire.com/file/3381rhnr6fqoqvq/%255BLoader%255D%253DCarParking.SimpleDLC/file"
             }
         },
         {
-            id: 2,
-            name: "GTA V",
-            price: 2999,
-            oldPrice: 3499,
-            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2xuz.jpg",
-            description: "Криминальная сага в Лос-Сантосе",
-            version: "Premium",
-            category: "action",
-            tags: ["экшен", "открытый мир"],
-            downloadLinks: {
-                free: "https://drive.google.com/gtav-free",
-                premium: "https://drive.google.com/gtav-premium"
+        name: "[Script] Polywar",
+        description: "Функции:\nАим, режим бога, бесконечные патроны и многое другое\n\nКлюч:\n     tg: @SimpleDLC",
+        version: "2.5.0",
+        img: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2xuz.jpg",
+        link: {
+                user: "         ",
+                premium: "https://www.mediafire.com/file/zyd5g90zjygso7s/%255BLoader%255D%253DPolywar.SimpleDLC/file"
+            }
+
+        },
+        {
+        name: "[Mod] Tomb of the mask",
+        description: "Интересная игра с простым геймплеем. Поможет убить время, во время скучного урока или когда нечего делать\n\nФункции:\n• Куплен премиум\n• Отсутствует реклама\n• Двойные монеты\n• Разблокированы все скины\n• Бесконечные сундуки",
+        version: "3.0.1",
+        img: "https://play-lh.googleusercontent.com/ATGr-U4JBK2VjFzKGK9eMMkrDxJaazadOUoz_7Yl0U5NrWSFcFUzEtNurWXYzVWc8uOO",
+        link: {
+                user: "",
+                premium: "https://t.me/SimpleDLC/377"
             }
         },
         {
-            id: 3,
-            name: "CS:GO",
-            price: 0,
-            oldPrice: 1499,
-            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co49w5.jpg",
-            description: "Тактический шутер",
-            version: "Free",
-            category: "fps",
-            tags: ["бесплатная", "шутер"],
-            downloadLinks: {
-                free: "https://store.steampowered.com/app/730/CSGO/",
-                premium: "https://drive.google.com/csgo-premium"
+        name: "[Script] Counter Flame",
+        description: "Интересный шутер, подобии CS 2 на телефоны. В игре доступны: аккаунты, инвентари, к/д, онлайн\n\nФункции:\n• Аим\n• Режим бога\n• Бесконечные патроны\n• Отключение отдачи\n• Быстрая стрельба \n• Дамаг хак\n• Заморозить игроков\n• Магазин хак\n• Флай",
+        version: "1.04",
+        img: "https://i.ibb.co/gFRQZhXk/IMG-20251128-090350-299.jpg",
+            link: {
+                user: "https://drive.google.com/cyberpunk-user",
+                premium: "https://www.mediafire.com/file/xlfydrj8m02qrrk/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
             }
+
         },
-        {
-            id: 4,
-            name: "Cyberpunk 2077",
-            price: 3999,
-            oldPrice: null,
-            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co2g0y.jpg",
-            description: "Ролевая игра в будущем",
-            version: "2.0",
-            category: "rpg",
-            tags: ["RPG", "футуристика"],
-            downloadLinks: {
-                free: "https://drive.google.com/cyberpunk-free",
-                premium: "https://drive.google.com/cyberpunk-premium"
-            }
-        },
-        {
-            id: 5,
-            name: "The Witcher 3",
-            price: 1499,
-            oldPrice: 2999,
-            image: "https://images.igdb.com/igdb/image/upload/t_cover_big/co1r7c.jpg",
-            description: "Фэнтези РПГ про ведьмака",
-            version: "Complete",
-            category: "rpg",
-            tags: ["фэнтези", "RPG"],
-            downloadLinks: {
-                free: "https://drive.google.com/witcher-free",
-                premium: "https://drive.google.com/witcher-premium"
-            }
-        }
     ]
 };

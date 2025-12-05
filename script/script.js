@@ -17,11 +17,7 @@ const CONFIG = {
             username: "simpledlc",
             description: "Основной канал с играми"
         },
-        {
-            name: "@gameupdates",
-            username: "gameupdates", 
-            description: "Обновления игр"
-        }
+        
     ],
     
     // Токен бота для проверки подписки

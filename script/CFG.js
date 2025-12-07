@@ -88,7 +88,20 @@ const CONFIG = {
                 user: "https://go.linkify.ru/2EMZ",
                 premium: "https://www.mediafire.com/file/ys0x74t9uk1rmt8/Roblox-2.690.721-Menu_20cheatsM.apk/file"
             }
-
         },
+        {
+        name: "[Script] StandLeo",
+        description: "Функции: \n• Аим \n• Режим бога \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: tg: @SimpleDLC",
+        version: "3.1",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrxp43MQ-4OH-BA4WQXEIySw3AFF_FdXc9dpjcyYinrjZCByqTae3pd5Q&s=10",
+            link: {
+                user: "https://go.linkify.ru/2EQj",
+                premium: "https://www.mediafire.com/file/ftwapnguye8ylm7/%255BLoader%255D%253DStandLeo.SimpleDLC/file"
+            }
+        },
+
+
+
+        
     ]
 };

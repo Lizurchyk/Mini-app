@@ -99,7 +99,16 @@ const CONFIG = {
                 premium: "https://www.mediafire.com/file/ftwapnguye8ylm7/%255BLoader%255D%253DStandLeo.SimpleDLC/file"
             }
         },
-
+        {
+        name: "[Mod] StandLeo Lite",
+        description: "Функции: \n• Аим \n• Вх \n• Бесконечные патроны \n• Анти гранаты \n• Нет отдачи \n• И многое другое...",
+        version: "1.1",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrxp43MQ-4OH-BA4WQXEIySw3AFF_FdXc9dpjcyYinrjZCByqTae3pd5Q&s=10",
+            link: {
+                user: "https://go.linkify.ru/2ERm",
+                premium: "https://www.mediafire.com/file/1ovvk2jnonqpusa/%255BSimpleDLC%255D_StandLeo_Lite.apk/file"
+            }
+        },
 
 
         

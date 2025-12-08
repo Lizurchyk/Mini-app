@@ -71,11 +71,11 @@ const CONFIG = {
         {
         name: "[Script] Counter Flame",
         description: "Интересный шутер, подобии CS 2 на телефоны. В игре доступны: аккаунты, инвентари, к/д, онлайн\n\nФункции:\n• Аим\n• Режим бога\n• Бесконечные патроны\n• Отключение отдачи\n• Быстрая стрельба \n• Дамаг хак\n• Заморозить игроков\n• Магазин хак\n• Флай",
-        version: "1.04",
+        version: "1.05",
         img: "https://i.ibb.co/gFRQZhXk/IMG-20251128-090350-299.jpg",
             link: {
-                user: "https://go.linkify.ru/2EMQ",
-                premium: "https://www.mediafire.com/file/xlfydrj8m02qrrk/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
+                user: "https://go.linkify.ru/2EQp",
+                premium: "https://www.mediafire.com/file/xdh7rccdsbepn61/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
             }
 
         },

@@ -93,7 +93,7 @@ const CONFIG = {
         name: "[Script] StandLeo",
         description: "Функции: \n• Аим \n• Режим бога \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: tg: @SimpleDLC",
         version: "3.1",
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrxp43MQ-4OH-BA4WQXEIySw3AFF_FdXc9dpjcyYinrjZCByqTae3pd5Q&s=10",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
             link: {
                 user: "https://go.linkify.ru/2EQj",
                 premium: "https://www.mediafire.com/file/ftwapnguye8ylm7/%255BLoader%255D%253DStandLeo.SimpleDLC/file"
@@ -103,7 +103,7 @@ const CONFIG = {
         name: "[Mod] StandLeo Lite",
         description: "Функции: \n• Аим \n• Вх \n• Бесконечные патроны \n• Анти гранаты \n• Нет отдачи \n• И многое другое...",
         version: "1.1",
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrxp43MQ-4OH-BA4WQXEIySw3AFF_FdXc9dpjcyYinrjZCByqTae3pd5Q&s=10",
+        img: "https://online-games-free.ru/wp-content/uploads/2025/10/standleo-lite.jpg",
             link: {
                 user: "https://go.linkify.ru/2ERm",
                 premium: "https://www.mediafire.com/file/1ovvk2jnonqpusa/%255BSimpleDLC%255D_StandLeo_Lite.apk/file"

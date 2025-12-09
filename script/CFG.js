@@ -109,7 +109,16 @@ const CONFIG = {
                 premium: "https://www.mediafire.com/file/1ovvk2jnonqpusa/%255BSimpleDLC%255D_StandLeo_Lite.apk/file"
             }
         },
-
+        {
+        name: "[Mod] Car parking multiplayer",
+        description: Функции: \n • ОТСУТСТВУЕТ БАН СЕРВЕР \n • 50.000 коинов \n • На всех машинах W16\n • Бесконечный бензин \n • И многое другое...",
+        version: "4.9.5",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFLg80VlMJANIGWk22vy8qMNA5sP5XucnSHE3qwYQMikZ8UO3-jvOSrup0&s=10",
+            link: {
+                user: "https://go.linkify.ru/2EWS",
+                premium: "https://www.mediafire.com/file/9tjmu7hbxxtuiwr/base.apk/file"
+                  }
+        },
 
         
     ]

@@ -106,8 +106,8 @@ const CONFIG = {
             version: "4.9.5",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFLg80VlMJANIGWk22vy8qMNA5sP5XucnSHE3qwYQMikZ8UO3-jvOSrup0&s=10",
             link: {
-                user: "https://go.linkify.ru/2EWW",
-                premium: "https://www.mediafire.com/file/fiuqk9q92bcf253/base.apk/file"
+                user: "https://go.linkify.ru/2EbT",
+                premium: "https://www.mediafire.com/file/t0sdvyujlr9gc1c/base.apk/file"
             }
         }
     ]

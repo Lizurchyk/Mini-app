@@ -102,12 +102,12 @@ const CONFIG = {
         },
         {
             name: "[Mod] Car parking multiplayer",
-            description: "Функции: \n • ОТСУТСТВУЕТ БАН СЕРВЕР \n • 50.000 коинов \n • На всех машинах W16\n • Бесконечный бензин \n • И многое другое...",
-            version: "4.9.5",
+            description: "Функции: \n • ОТСУТСТВУЕТ БАН СЕРВЕР \n • 50.000 коинов \n • Бесконечные деньги \n • На всех машинах W16\n • Бесконечный бензин \n • И многое другое...",
+            version: "4.9.6",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFLg80VlMJANIGWk22vy8qMNA5sP5XucnSHE3qwYQMikZ8UO3-jvOSrup0&s=10",
             link: {
-                user: "https://go.linkify.ru/2EbT",
-                premium: "https://www.mediafire.com/file/t0sdvyujlr9gc1c/base.apk/file"
+                user: "https://go.linkify.ru/2EeB",
+                premium: "https://www.mediafire.com/file/0097yrq65x85jke/base.apk/file"
             }
         }
     ]

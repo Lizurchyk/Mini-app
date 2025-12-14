@@ -96,8 +96,8 @@ const CONFIG = {
             version: "1.1",
             img: "https://online-games-free.ru/wp-content/uploads/2025/10/standleo-lite.jpg",
             link: {
-                user: "https://go.linkify.ru/2ERm",
-                premium: "https://www.mediafire.com/file/1ovvk2jnonqpusa/%255BSimpleDLC%255D_StandLeo_Lite.apk/file"
+                user: "https://go.linkify.ru/2Egi",
+                premium: "https://www.mediafire.com/file/nta7lxdkew2mb3b/%255BMOD%255D_STANDLEO_LITE_BY_TG_%2540SimpleDLC.apk/file"
             }
         },
         {

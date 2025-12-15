@@ -109,6 +109,21 @@ const CONFIG = {
                 user: "https://go.linkify.ru/2EeB",
                 premium: "https://www.mediafire.com/file/0097yrq65x85jke/base.apk/file"
             }
-        }
+        },
+      {
+            name: "[Mod] StandLeo",
+            description: "Функции: \n• Аим \n• Анти гранаты \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: t.me/SimpleDLC",
+            version: "3.1",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
+            link: {
+                user: "https://go.linkify.ru/2Ei1",
+                premium: "https://www.mediafire.com/file/1eh3v8colgke34s/%25D0%2590%25D0%259F%25D0%259A_%25D0%25A7%25D0%2598%25D0%25A2_STANDLEO_3.1.zip/file"
+            }
+        },
+
+
+
+
+
     ]
 };

@@ -84,7 +84,7 @@ const CONFIG = {
             name: "[Script] StandLeo",
             description: "Функции: \n• Аим \n• Режим бога \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: tg: @SimpleDLC",
             version: "3.1",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
+            img: "https://androidprog.com/wp-content/uploads/2023/04/standleo.webp",
             link: {
                 user: "https://go.linkify.ru/2EQj",
                 premium: "https://www.mediafire.com/file/ftwapnguye8ylm7/%255BLoader%255D%253DStandLeo.SimpleDLC/file"
@@ -114,7 +114,7 @@ const CONFIG = {
             name: "[Mod] StandLeo",
             description: "Функции: \n• Аим \n• Анти гранаты \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: t.me/SimpleDLC",
             version: "3.1",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
+            img: "https://androidprog.com/wp-content/uploads/2023/04/standleo.webp",
             link: {
                 user: "https://go.linkify.ru/2Ei1",
                 premium: "https://www.mediafire.com/file/1eh3v8colgke34s/%25D0%2590%25D0%259F%25D0%259A_%25D0%25A7%25D0%2598%25D0%25A2_STANDLEO_3.1.zip/file"

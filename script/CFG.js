@@ -41,13 +41,13 @@ const CONFIG = {
             }
         },
         {
-            name: "[Script] Polywar",
-            description: "Функции:\nАим, режим бога, бесконечные патроны и многое другое\n\nКлюч:\n     tg: @SimpleDLC",
-            version: "2.5.0",
+            name: "[Mod] Polywar",
+            description: "Функции:\n • Бесконечные патроны \n • Нет отдачи \n • Нет разброса пуль \n И многое другое...",
+            version: "2.6.0",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
             link: {
-                user: "https://go.linkify.ru/2EMO",
-                premium: "https://www.mediafire.com/file/zyd5g90zjygso7s/%255BLoader%255D%253DPolywar.SimpleDLC/file"
+                user: "https://go.linkify.ru/2El9",
+                premium: "https://www.mediafire.com/file/fdgte758p1vcxyg/%255BTG_SimpleDLC%255D_Polywar_2.6.0_.apk/file"
             }
         },
         {

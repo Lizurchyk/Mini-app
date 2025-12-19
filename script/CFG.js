@@ -16,7 +16,7 @@ const CONFIG = {
             description: "Основной канал с играми",
         },
         {
-           name: "Feant Cheats",
+           name: "Fent Cheats",
            username: "FentCheats",
            description: "Лучшие читы на приватки",
         },

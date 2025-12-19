@@ -13,8 +13,13 @@ const CONFIG = {
         {
             name: "@simpledlc",
             username: "simpledlc",
-            description: "Основной канал с играми"
-        }
+            description: "Основной канал с играми",
+        },
+        {
+           name: "Feant Cheats",
+           username: "FentCheats",
+           description: "Лучшие читы на приватки",
+        },
     ],
     
     // Токен бота для проверки подписки

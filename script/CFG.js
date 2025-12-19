@@ -27,7 +27,7 @@ const CONFIG = {
     
     // Премиум пользователи
     PREMIUM_USERS: {
-        '1439379837': {
+        '1439376669837': {
             status: 'premium',
             expires: '2025-12-31'
         }

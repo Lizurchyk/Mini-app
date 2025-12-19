@@ -36,13 +36,13 @@ const CONFIG = {
     // Игры (без поля price)
     GAMES: [
         {
-            name: "[Script] Car Parking Multiplayer",
-            description: "Функции: \nНакрутка валют, автоматическая победа в гонках, накрутка статистики, купить любую машину, хром, получить в16, сделать машину полицейской и многое другое\n\nКлюч: \n  tg: @SimpleDLC",
-            version: "4.9.5",
-            img: "https://f4.bcbits.com/img/a1011463993_16.jpg",
+            name: "[Mod] StandChillow",
+            description: "Функции: • Аим \n • Есп \n • Чамсы \n • И другое ...",
+            version: "1.6",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSudvIrh_-rEUazN8IwpIkzjgCjDDE2VyZZsuXwWTQKf1Zknfc5tGMPvmQ&s=10",
             link: {
-                user: "https://go.linkify.ru/2EMN",
-                premium: "https://www.mediafire.com/file/3381rhnr6fqoqvq/%255BLoader%255D%253DCarParking.SimpleDLC/file"
+                user: "https://go.linkify.ru/2EpH",
+                premium: "https://www.mediafire.com/file/um0skqps6q15l3b/%255BTG_SimpleDLC%255D_StandChillow_1.6._.apk/file"
             }
         },
         {

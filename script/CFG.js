@@ -41,26 +41,6 @@ const CONFIG = {
             }
         },
         {
-            name: "[Mod] Polywar",
-            description: "Функции:\n • Бесконечные патроны \n • Нет отдачи \n • Нет разброса пуль \n И многое другое...",
-            version: "2.6.0",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ18EPJDQ6RLViyShRkAGR5CU2oNLAsUfU47Lo6pYt3g&s=10",
-            link: {
-                user: "https://go.linkify.ru/2El9",
-                premium: "https://www.mediafire.com/file/fdgte758p1vcxyg/%255BTG_SimpleDLC%255D_Polywar_2.6.0_.apk/file"
-            }
-        },
-        {
-            name: "[Mod] Tomb of the mask",
-            description: "Интересная игра с простым геймплеем. Поможет убить время, во время скучного урока или когда нечего делать\n\nФункции:\n• Куплен премиум\n• Отсутствует реклама\n• Двойные монеты\n• Разблокированы все скины\n• Бесконечные сундуки",
-            version: "3.0.1",
-            img: "https://play-lh.googleusercontent.com/ATGr-U4JBK2VjFzKGK9eMMkrDxJaazadOUoz_7Yl0U5NrWSFcFUzEtNurWXYzVWc8uOO",
-            link: {
-                user: "https://go.linkify.ru/2EMP",
-                premium: "https://t.me/SimpleDLC/377"
-            }
-        },
-        {
             name: "[Script] Counter Flame",
             description: "Интересный шутер, подобии CS 2 на телефоны. В игре доступны: аккаунты, инвентари, к/д, онлайн\n\nФункции:\n• Аим\n• Режим бога\n• Бесконечные патроны\n• Отключение отдачи\n• Быстрая стрельба \n• Дамаг хак\n• Заморозить игроков\n• Магазин хак\n• Флай",
             version: "1.05",
@@ -68,16 +48,6 @@ const CONFIG = {
             link: {
                 user: "https://go.linkify.ru/2EQp",
                 premium: "https://www.mediafire.com/file/xdh7rccdsbepn61/%255BLoader%255D%253DCounterFlame.SimpleDLC/file"
-            }
-        },
-        {
-            name: "[Mod] Roblox",
-            description: "Roblox – это невероятная виртуальная вселенная для творчества, общения с друзьями и воплощения всех ваших фантазий. Присоединитесь к миллионам других людей и погрузитесь в невероятное многообразие миров, создаваемых мировым сообществом!\n\n\nОсобенности: Мод-меню",
-            version: "2.690.721",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTHmNKSghjjLSRNof-U9A_pVgBOfMSORyQv72rNuXbww&s=10",
-            link: {
-                user: "https://go.linkify.ru/2EMZ",
-                premium: "https://www.mediafire.com/file/ys0x74t9uk1rmt8/Roblox-2.690.721-Menu_20cheatsM.apk/file"
             }
         },
         {
@@ -98,16 +68,6 @@ const CONFIG = {
             link: {
                 user: "https://go.linkify.ru/2Egi",
                 premium: "https://www.mediafire.com/file/nta7lxdkew2mb3b/%255BMOD%255D_STANDLEO_LITE_BY_TG_%2540SimpleDLC.apk/file"
-            }
-        },
-        {
-            name: "[Mod] Car parking multiplayer",
-            description: "Функции: \n • ОТСУТСТВУЕТ БАН СЕРВЕР \n • 50.000 коинов \n • Бесконечные деньги \n • На всех машинах W16\n • Бесконечный бензин \n • И многое другое...",
-            version: "4.9.6",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFLg80VlMJANIGWk22vy8qMNA5sP5XucnSHE3qwYQMikZ8UO3-jvOSrup0&s=10",
-            link: {
-                user: "https://go.linkify.ru/2EeB",
-                premium: "https://www.mediafire.com/file/0097yrq65x85jke/base.apk/file"
             }
         },
       {

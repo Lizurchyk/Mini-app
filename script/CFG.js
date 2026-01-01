@@ -80,8 +80,16 @@ const CONFIG = {
                 premium: "https://www.mediafire.com/file/1eh3v8colgke34s/%25D0%2590%25D0%259F%25D0%259A_%25D0%25A7%25D0%2598%25D0%25A2_STANDLEO_3.1.zip/file"
             }
         },
-
-
+      {
+            name: "[Mod] Polywar",
+            description: "Функции: \n• Режим бога \n• Анти гранаты \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...",
+            version: "2.6.0",
+            img: "https://play-lh.googleusercontent.com/uccdbLxCVw3rh-dDDnpKQ9If1cCyHhLkn_k0ovSuk_VDRxXz8yPHbw1azJztqCbAQA=w240-h480-rw",
+            link: {
+                user: "https://go.linkify.ru/2F6Q",
+                premium: "https://mega.nz/file/2N12yCAS#cMMYFxafw6WLm1jXkNwIwmJybFBSfonYMI-G5ClYXkI"
+            }
+        },
 
 
 

@@ -62,12 +62,12 @@ const CONFIG = {
         },
         {
             name: "[Mod] StandLeo Lite",
-            description: "Функции: \n• Аим \n• Вх \n• Бесконечные патроны \n• Анти гранаты \n• Нет отдачи \n• И многое другое...",
-            version: "1.1",
+            description: "Функции: \n• Вх \n• Анти гранаты \n• Нет отдачи \n• И многое другое...",
+            version: "1.2",
             img: "https://online-games-free.ru/wp-content/uploads/2025/10/standleo-lite.jpg",
             link: {
-                user: "https://go.linkify.ru/2Egi",
-                premium: "https://www.mediafire.com/file/nta7lxdkew2mb3b/%255BMOD%255D_STANDLEO_LITE_BY_TG_%2540SimpleDLC.apk/file"
+                user: "https://go.linkify.ru/2FAH",
+                premium: "https://mega.nz/file/aUMn0ZyA#GTQ7Mjqizgg6pfE1U2MhGSQ7Y3V2LMFU8aPUJu3n118"
             }
         },
       {

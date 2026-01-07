@@ -4,7 +4,7 @@ const CONFIG = {
     MAIN_CHANNEL: {
         name: "SimpleDLC",
         username: "simpledlc",
-        photo: "https://img.telemetr.io/c/2DilQY/5350323619592532233?ty=l",
+        photo: "https://img.telemetr.io/c/2DilQY/5395316193750618010?ty=l",
         title: "SimpleDLC"
     },
     
@@ -90,7 +90,16 @@ const CONFIG = {
                 premium: "https://mega.nz/file/2N12yCAS#cMMYFxafw6WLm1jXkNwIwmJybFBSfonYMI-G5ClYXkI"
             }
         },
-
+      {
+            name: "[Mod] StandLeo Classic",
+            description: "Функции: \n• Мини аим \n• Анти гранаты \n• Бесконечные патроны \n• Вх \n• Радар хак",
+            version: "1.0",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVOvuvVFtmo-FyD27MbNLryfVx0DP1JYMWruh2LISBjCHywxjH9BQlfF0&s=10",
+            link: {
+                user: "https://go.linkify.ru/2FDd",
+                premium: "https://mega.nz/file/2EkDXCLR#2BhYutXnvRAlOJgoo3DyCcL4SH2qmpcdXhR4XcTZRJY"
+            }
+        },
 
 
     ]

@@ -100,6 +100,21 @@ const CONFIG = {
                 premium: "https://mega.nz/file/2EkDXCLR#2BhYutXnvRAlOJgoo3DyCcL4SH2qmpcdXhR4XcTZRJY"
             }
         },
+      {
+            name: "[Script] StandLeo Classic",
+            description: "Функции: \n• Аим \n• Аим в2 \n• Анти гранаты \n• Бесконечные патроны \n• Нет отдачи \n• Радар хак \n• И другое ...",
+            version: "1.0",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVOvuvVFtmo-FyD27MbNLryfVx0DP1JYMWruh2LISBjCHywxjH9BQlfF0&s=10",
+            link: {
+                user: "https://go.linkify.ru/2FFj",
+                premium: "https://mega.nz/file/aYEkiZDD#7QNPBsI3v83sP96ZAC-gVipKRfsTsqqjX9SjeaUyBAA"
+            }
+        },
+
+
+
+
+
 
 
     ]

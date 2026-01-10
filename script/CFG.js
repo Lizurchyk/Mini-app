@@ -111,7 +111,16 @@ const CONFIG = {
             }
         },
 
-
+      {
+            name: "[Script] Car parking multiplayer",
+            description: "Функции: \n• Накрутка денег \n• Накрутка монет \n• Покупка любых авто \n• И другое ...",
+            version: "4.9.6",
+            img: "https://www.metacritic.com/a/img/resize/5a720b702ac5712938caef5ec3f328a373172da8/catalog/provider/6/12/6-1-828593-59.jpg?auto=webp&fit=crop&height=675&width=1200",
+            link: {
+                user: "https://go.linkify.ru/2FI0",
+                premium: "https://mega.nz/file/rZNUiZLL#cRRmCCNSGxKfOfPeLybvZIZpanJfrNiJLxYRm7ZY9QI"
+            }
+        },
 
 
 

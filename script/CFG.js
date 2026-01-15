@@ -14,7 +14,7 @@ const CONFIG = {
             name: "@simpledlc",
             username: "simpledlc",
             description: "Основной канал с играми",
-        }
+        },
         {
             name: "@FentCheats",
             username: "FentCheats",

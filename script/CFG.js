@@ -15,11 +15,7 @@ const CONFIG = {
             username: "simpledlc",
             description: "Основной канал с играми",
         },
-        {
-            name: "@FentCheats",
-            username: "FentCheats",
-            description: "Спонсор",
-        }
+ 
     ],
     
     // Токен бота для проверки подписки
@@ -29,7 +25,7 @@ const CONFIG = {
     PREMIUM_USERS: {
         '1439379837': {
             status: 'premium',
-            expires: '2025-12-31'
+            expires: '2026-12-31'
         }
     },
     

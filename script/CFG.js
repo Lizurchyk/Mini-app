@@ -63,12 +63,12 @@ const CONFIG = {
         },
         {
             name: "[Script] StandLeo",
-            description: "Функции: \n• Аим \n• Бесконечные патроны \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: tg: @SimpleDLC",
-            version: "3.2",
+            description: "Функции: \n• Аим \n• Режим призрака \n• Изменить спавн \n• Бесконечные патроны \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: tg: @SimpleDLC",
+            version: "3.2F1",
             img: "https://androidprog.com/wp-content/uploads/2023/04/standleo.webp",
             link: {
-                user: "https://go.linkify.ru/2F14",
-                premium: "https://mega.nz/file/zIlDwRKA#B3MUGtB1ET-e3jR8JAmDazbYPMLEu1z58Qq2nj8T5OU"
+                user: "https://go.linkify.ru/2FQb",
+                premium: "https://mega.nz/file/Pck3XBwA#FuVA1VRb8UF6Bmd07TTPY_f1FHBHXIW1jlg2bzqsu4o"
             }
         },
         {

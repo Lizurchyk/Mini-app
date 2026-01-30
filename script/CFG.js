@@ -132,6 +132,16 @@ const CONFIG = {
                 premium: "https://mega.nz/file/rZNUiZLL#cRRmCCNSGxKfOfPeLybvZIZpanJfrNiJLxYRm7ZY9QI"
             }
         },
+     {
+            name: "[Mod] Subway Surf",
+            description: "Функции: \n• Бессмертие \n• Накрутка ключей \n• Накрутка монет \n• Открыть персонажей \n• И другое ...",
+            version: "4.9.6",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOYw9tYEYf4QC8Ge-zewYxrHDSkdxa8pZR_5Ea8O5W0Q&s=10",
+            link: {
+                user: "https://go.linkify.ru/2Fnb",
+                premium: "https://mega.nz/file/TUU0AQbK#FwJkVqhngSA7gSZHGSB9cy7Vm1HDS20bMlNfoVKi-1M"
+            }
+        },
 
 
 

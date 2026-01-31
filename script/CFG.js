@@ -142,6 +142,7 @@ const CONFIG = {
                 premium: "https://mega.nz/file/TUU0AQbK#FwJkVqhngSA7gSZHGSB9cy7Vm1HDS20bMlNfoVKi-1M"
             }
         },
+{
 
             name: "[Mod] Polyfield",
             description: "Функции: \n• Бессмертие \n• Накрутка патронов \n• Хак скорости \n• Быстрая стрельба \n• И другое ...",

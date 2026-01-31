@@ -135,11 +135,21 @@ const CONFIG = {
      {
             name: "[Mod] Subway Surf",
             description: "Функции: \n• Бессмертие \n• Накрутка ключей \n• Накрутка монет \n• Открыть персонажей \n• И другое ...",
-            version: "4.9.6",
+            version: "3.57.1",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOYw9tYEYf4QC8Ge-zewYxrHDSkdxa8pZR_5Ea8O5W0Q&s=10",
             link: {
                 user: "https://go.linkify.ru/2Fnb",
                 premium: "https://mega.nz/file/TUU0AQbK#FwJkVqhngSA7gSZHGSB9cy7Vm1HDS20bMlNfoVKi-1M"
+            }
+        },
+
+            name: "[Mod] Polyfield",
+            description: "Функции: \n• Бессмертие \n• Накрутка патронов \n• Хак скорости \n• Быстрая стрельба \n• И другое ...",
+            version: "0.7.3",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL4X2tC8PhICMiRCyjWLrJo5sNgcdwgh2L-zawVIWx3w&s=10",
+            link: {
+                user: "https://go.linkify.ru/2Fpz",
+                premium: "https://mega.nz/file/GBlj2S4a#klMsG_VQJaooq3VxVY4ViKiG95RHyJ1AqvhWsE5qC9c"
             }
         },
 

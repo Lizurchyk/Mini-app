@@ -33,7 +33,7 @@ const CONFIG = {
     GAMES: [
       {
             name: "[Mod] StandChillow V3",
-            description: "Функции: • Аим \n • Есп \n • Чамсы \n • Invisible \n • No clip \n • И многое другое ...",
+            description: "Функции:\n • Аим \n • Есп \n • Чамсы \n • Invisible \n • No clip \n • И многое другое ...",
             version: "1.6",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSudvIrh_-rEUazN8IwpIkzjgCjDDE2VyZZsuXwWTQKf1Zknfc5tGMPvmQ&s=10",
             link: {
@@ -43,7 +43,7 @@ const CONFIG = {
         },
         {
             name: "[Mod] StandChillow",
-            description: "Функции: • Аим \n • Есп \n • Чамсы \n • И другое ...",
+            description: "Функции:\n • Аим \n • Есп \n • Чамсы \n • И другое ...",
             version: "1.6",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSudvIrh_-rEUazN8IwpIkzjgCjDDE2VyZZsuXwWTQKf1Zknfc5tGMPvmQ&s=10",
             link: {

@@ -10,11 +10,9 @@ let unsubscribedChannels = [];
 // Функция форматирования текста с переносами строк
 function formatTextWithLineBreaks(text) {
     if (!text) return '';
-    // Заменяем \n на HTML тег <br>
-    const formattedText = text
-        .replace(/\\n/g, '<br>')  // Для сохраненных \n
-        .replace(/\n/g, '<br>');  // Для новых переносов
-    return formattedText;
+    return text
+        .replace(/\\n/g, '<br>')
+        .replace(/\n/g, '<br>');
 }
 
 // Инициализация логотипа
@@ -22,10 +20,8 @@ function initLogo() {
     const logoImg = document.getElementById('logoImg');
     const logo = document.querySelector('.logo');
     
-    // Устанавливаем фото канала
     logoImg.style.backgroundImage = `url('${CONFIG.MAIN_CHANNEL.photo}')`;
     
-    // Клик по логотипу - открывает заданный канал
     logo.onclick = function() {
         tg.openTelegramLink(`https://t.me/${CONFIG.MAIN_CHANNEL.username}`);
     };
@@ -79,46 +75,54 @@ function updateUserStatus(isPremium) {
     }
 }
 
-// Проверка подписки на каналы (возвращает массив неподписанных каналов)
+// Проверка подписки на каналы
 async function checkChannelSubscription(userId) {
-    if (!userId) return [];
+    if (!userId) return [...CONFIG.SUBSCRIPTION_CHANNELS];
     
     const unsubscribed = [];
     
     try {
         for (const channel of CONFIG.SUBSCRIPTION_CHANNELS) {
             const response = await fetch(
-                `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${channel.name}&user_id=${userId}`
+                `https://api.telegram.org/bot\( {CONFIG.BOT_TOKEN}/getChatMember?chat_id=@ \){channel.username}&user_id=${userId}`,
+                { cache: 'no-store' }
             );
+            
+            if (!response.ok) {
+                unsubscribed.push(channel);
+                continue;
+            }
+            
             const data = await response.json();
             
             const isSubscribed = data.ok && 
-                ['member', 'administrator', 'creator'].includes(data.result.status);
+                ['member', 'administrator', 'creator', 'restricted'].includes(data.result?.status);
             
             if (!isSubscribed) {
                 unsubscribed.push(channel);
             }
+            
+            // Небольшая задержка между запросами (анти-флуд)
+            await new Promise(r => setTimeout(r, 700 + Math.random() * 500));
         }
+        
         unsubscribedChannels = unsubscribed;
         return unsubscribed;
     } catch (error) {
         console.error('Ошибка проверки подписки:', error);
-        // При ошибке показываем все каналы
         unsubscribedChannels = [...CONFIG.SUBSCRIPTION_CHANNELS];
         return unsubscribedChannels;
     }
 }
 
-// Показать экран подписки (только неподписанные каналы)
+// Показать экран подписки
 function showSubscriptionScreen(unsubscribed) {
     const container = document.getElementById('results_search');
     const searchContainer = document.querySelector('.search-container');
     
-    // Скрываем поиск
     searchContainer.style.display = 'none';
     
     if (unsubscribed.length === 0) {
-        // Если все каналы подписаны, показываем игры
         showGames(false);
         searchContainer.style.display = 'block';
         return;
@@ -126,8 +130,8 @@ function showSubscriptionScreen(unsubscribed) {
     
     const channelsList = unsubscribed.map(channel => `
         <div class="channel-item">
-            <a href="https://t.me/${channel.username}" target="_blank">${channel.name}</a>
-            <button onclick="tg.openTelegramLink('https://t.me/${channel.username}')">
+            <span>${channel.name || '@' + channel.username}</span>
+            <button onclick="tg.openLink('${channel.link}', { try_instant_view: false })">
                 Подписаться
             </button>
         </div>
@@ -136,30 +140,34 @@ function showSubscriptionScreen(unsubscribed) {
     container.innerHTML = `
         <div class="subscription-screen">
             <h2>❌ Требуется подписка</h2>
-            <p>Для доступа к играм необходимо подписаться на ${unsubscribed.length} канал(ов):</p>
+            <p>Для доступа необходимо подписаться на ${unsubscribed.length} канал(ов):</p>
             <div class="channel-list">
                 ${channelsList}
             </div>
-            <button class="subscribe-btn" onclick="subscribeToAll()">
-                📢 Подписаться на все (${unsubscribed.length})
-            </button>
             <br>
+            <button class="subscribe-btn" onclick="subscribeToAll()">
+                📢 Подписаться на все
+            </button>
+            <br><br>
             <button class="check-btn" onclick="recheckSubscription()">
                 🔄 Я подписался, проверить
             </button>
+            <p style="margin-top: 16px; font-size: 0.9em; opacity: 0.8;">
+                После подписки нажмите «Проверить». Проверка может занять до 10 секунд.
+            </p>
         </div>
     `;
 }
 
-// Подписаться на все неподписанные каналы
+// Подписаться на все
 function subscribeToAll() {
     if (unsubscribedChannels.length === 0) return;
     
     unsubscribedChannels.forEach(channel => {
-        tg.openTelegramLink(`https://t.me/${channel.username}`);
+        tg.openLink(channel.link, { try_instant_view: false });
     });
     
-    tg.showAlert(`Открыто ${unsubscribedChannels.length} канал(ов) для подписки. Пожалуйста, подпишитесь на каждый из них.`);
+    tg.showAlert(`Открыты ссылки на ${unsubscribedChannels.length} канал(ов).\n\nПодпишитесь в каждом и нажмите «Проверить»`);
 }
 
 // Перепроверка подписки
@@ -170,55 +178,51 @@ async function recheckSubscription() {
         return;
     }
     
-    // Показываем загрузку
     const container = document.getElementById('results_search');
     container.innerHTML = `
         <div class="subscription-screen">
             <h2>⏳ Проверка подписки...</h2>
-            <p>Пожалуйста, подождите</p>
+            <p>Подождите несколько секунд</p>
         </div>
     `;
+    
+    // Задержка для обновления статуса в Telegram
+    await new Promise(r => setTimeout(r, 4000));
     
     const unsubscribed = await checkChannelSubscription(userId);
     
     if (unsubscribed.length === 0) {
-        // Все каналы подписаны
-        showGames(false);
+        showGames(isPremiumUser(userId));
         const searchContainer = document.querySelector('.search-container');
         searchContainer.style.display = 'block';
         tg.showAlert('✅ Отлично! Вы подписаны на все каналы. Доступ открыт!');
     } else {
-        // Есть неподписанные каналы
         showSubscriptionScreen(unsubscribed);
-        tg.showAlert(`❌ Вы не подписаны на ${unsubscribed.length} канал(ов). Пожалуйста, подпишитесь на все указанные выше каналы.`);
+        tg.showAlert(`❌ Вы не подписаны на ${unsubscribed.length} канал(ов)`);
     }
 }
 
-// Создание карточки игры (без цены) с поддержкой переносов строк
+// Создание карточки игры
 function createGameCard(game, isPremium) {
-    // Получаем ссылку в зависимости от статуса пользователя
     const downloadLink = isPremium ? 
         (game.link?.premium || game.link) : 
         (game.link?.user || game.link);
     
-    // Проверяем наличие обязательных полей
     if (!game.name || !game.description || !game.version || !game.img || !downloadLink) {
-        console.error('Недостаточно данных для создания карточки:', game);
         return '';
     }
     
-    // Форматируем описание с поддержкой переносов строк
     const formattedDescription = formatTextWithLineBreaks(game.description);
     
     return `
         <div class="card">
-            <img src="${game.img}" alt="${game.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Нет+изображения'">
+            <img src="\( {game.img}" alt=" \){game.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Нет+изображения'">
             <div class="card-text">
                 <p1>${game.name}</p1>
                 <div class="product-version">${game.version}</div>
                 <p2>${formattedDescription}</p2>
             </div>
-            <button onclick="downloadGame('${downloadLink}', '${game.name}')">
+            <button onclick="downloadGame('\( {downloadLink}', ' \){game.name}')">
                 📥 Скачать
             </button>
         </div>
@@ -230,10 +234,8 @@ function showGames(isPremium) {
     const container = document.getElementById('results_search');
     const searchContainer = document.querySelector('.search-container');
     
-    // Показываем поиск
     searchContainer.style.display = 'block';
     
-    // Фильтруем игры, у которых есть все необходимые данные
     const validGames = CONFIG.GAMES.filter(game => 
         game.name && game.description && game.version && game.img && 
         (game.link || (game.link?.user && game.link?.premium))
@@ -247,7 +249,6 @@ function showGames(isPremium) {
     const cards = validGames.map(game => createGameCard(game, isPremium)).join('');
     container.innerHTML = `<div class="cards-container">${cards}</div>`;
     
-    // Обновляем статус пользователя
     updateUserStatus(isPremium);
 }
 
@@ -262,15 +263,14 @@ function searchGames() {
         return;
     }
     
-    // Ищем по имени, описанию и версии (без учета HTML тегов для поиска)
+    const cleanDescription = game => game.description 
+        ? game.description.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') 
+        : '';
+    
     const filtered = CONFIG.GAMES.filter(game => {
-        // Для поиска используем чистый текст без HTML
-        const cleanDescription = game.description ? 
-            game.description.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') : '';
-        
         return (
             (game.name && game.name.toLowerCase().includes(searchTerm)) ||
-            (cleanDescription && cleanDescription.toLowerCase().includes(searchTerm)) ||
+            (cleanDescription(game) && cleanDescription(game).toLowerCase().includes(searchTerm)) ||
             (game.version && game.version.toLowerCase().includes(searchTerm))
         );
     });
@@ -308,36 +308,29 @@ function downloadGame(url, gameName) {
 async function checkAccess() {
     currentUserId = getUserId();
     
-    // Инициализируем логотип
     initLogo();
     
     if (!currentUserId) {
-        // Если ID не найден, показываем все каналы
         showSubscriptionScreen([...CONFIG.SUBSCRIPTION_CHANNELS]);
         return;
     }
     
-    // Проверяем премиум доступ
     const premium = isPremiumUser(currentUserId);
     
     if (premium) {
-        // Премиум пользователь - сразу показываем игры
         showGames(true);
         return;
     }
     
-    // Обычный пользователь - проверяем подписку
     const unsubscribed = await checkChannelSubscription(currentUserId);
     
     if (unsubscribed.length === 0) {
-        // Подписан на все каналы
         showGames(false);
     } else {
-        // Не подписан на некоторые каналы
         showSubscriptionScreen(unsubscribed);
         updateUserStatus(false);
     }
 }
 
-// Запуск приложения
+// Запуск
 document.addEventListener('DOMContentLoaded', checkAccess);

@@ -15,6 +15,11 @@ const CONFIG = {
             username: "simpledlc",
             description: "Основной канал с играми",
         },
+         {
+            name: "https://t.me/+nJMy32vGfpUwN2Jk",
+            username: "https://t.me/+nJMy32vGfpUwN2Jk",
+            description: "Тестирую хуйню, подождите 5 минут",
+        },
  
     ],
     

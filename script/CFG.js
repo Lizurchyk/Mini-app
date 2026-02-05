@@ -14,6 +14,11 @@ const CONFIG = {
             username: "simpledlc",
             description: "Основной канал с играми",
         },
+         {
+            name: "@ApkNeetMod",
+            username: "ApkNeetMod",
+            description: "Спонсор",
+        },
  
     ],
     

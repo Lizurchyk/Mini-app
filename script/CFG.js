@@ -17,7 +17,7 @@ const CONFIG = {
          {
             name: "@ApkNeetMod",
             username: "https://t.me/ApkNeetMod",
-            description: "ggg",
+            description: "gg",
         },
  
     ],

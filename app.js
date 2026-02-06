@@ -82,79 +82,148 @@ function updateUserStatus(isPremium) {
 function getChatIdFromLink(link) {
     if (!link) return null;
     
-    // Извлекаем часть после t.me/
-    const url = new URL(link);
-    const path = url.pathname;
-    
-    if (path.startsWith('/+')) {
-        // Для приватных каналов вида t.me/+MyUkrVP_q5E3YzM6
-        // Бот должен быть администратором в канале
-        const inviteCode = path.substring(2); // Убираем /+
-        // Для проверки подписки на приватные каналы бот должен быть админом
-        // и мы используем chat_id канала (если известен)
-        // Временно возвращаем invite code для попытки
-        return inviteCode;
-    } else if (path.startsWith('/@')) {
-        // Для публичных каналов вида t.me/@username
-        const username = path.substring(2); // Убираем /@
-        return `@${username}`;
-    } else if (path.startsWith('/')) {
-        // Для коротких ссылок вида t.me/username
-        const username = path.substring(1); // Убираем /
-        return `@${username}`;
+    try {
+        const url = new URL(link);
+        const path = url.pathname;
+        
+        if (path.startsWith('/+')) {
+            // Для приватных каналов с инвайт-ссылками типа t.me/+MyUkrVP_q5E3YzM6
+            // Нужно использовать числовой chat_id, а не инвайт-код
+            // Бот должен быть администратором канала
+            const inviteCode = path.substring(2); // Убираем /+
+            
+            // Для приватных каналов с инвайт-ссылкой 
+            // используем chat_id в виде -100 + цифровой ID канала
+            // Если у вас есть числовой chat_id, используйте его
+            // Пример: если канал имеет ID -1001234567890
+            // return "-1001234567890";
+            
+            // Если нет числового ID, попробуем использовать инвайт-код
+            // но это может не работать для приватных каналов
+            return `@${inviteCode}`;
+            
+        } else if (path.startsWith('/@')) {
+            // Для публичных каналов вида t.me/@username
+            const username = path.substring(2); // Убираем /@
+            return `@${username}`;
+        } else if (path.startsWith('/')) {
+            // Для коротких ссылок вида t.me/username
+            const username = path.substring(1); // Убираем /
+            // Проверяем, не является ли это инвайт-ссылкой (начинается с +)
+            if (username.startsWith('+')) {
+                return `@${username.substring(1)}`; // Убираем +
+            }
+            return `@${username}`;
+        }
+    } catch (e) {
+        console.error('Ошибка парсинга ссылки:', link, e);
     }
     
     return null;
 }
 
-// Упрощенная проверка подписки (через открытие ссылок)
+// Получаем числовой chat_id из инвайт-ссылки
+async function getChatIdFromInviteLink(inviteCode) {
+    try {
+        // Попытка получить информацию о чате по инвайт-ссылке
+        // Этот метод работает только если бот уже является участником чата
+        const response = await fetch(
+            `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChat?chat_id=@${inviteCode}`
+        );
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.ok) {
+                return data.result.id;
+            }
+        }
+    } catch (error) {
+        console.error('Ошибка получения chat_id:', error);
+    }
+    
+    return null;
+}
+
+// Проверка подписки на канал
+async function checkSingleChannelSubscription(userId, channel) {
+    if (!userId || !channel) return false;
+    
+    try {
+        let chatId = getChatIdFromLink(channel.username);
+        
+        // Если это инвайт-ссылка и chatId начинается с @, пробуем получить числовой ID
+        if (chatId && chatId.startsWith('@') && channel.username.includes('/+')) {
+            // Попробуем найти chat_id в кастомном маппинге
+            const customMapping = {
+                // Добавьте здесь маппинг для ваших приватных каналов
+                // 'https://t.me/+MyUkrVP_q5E3YzM6': '-1001234567890'
+            };
+            
+            if (customMapping[channel.username]) {
+                chatId = customMapping[channel.username];
+            } else {
+                // Пробуем получить числовой ID через API
+                const inviteCode = channel.username.split('/+')[1]?.split('?')[0];
+                if (inviteCode) {
+                    const numericChatId = await getChatIdFromInviteLink(inviteCode);
+                    if (numericChatId) {
+                        chatId = numericChatId;
+                    }
+                }
+            }
+        }
+        
+        if (!chatId) {
+            console.warn(`Не удалось извлечь chat_id для канала: ${channel.name}`);
+            return false; // Не можем проверить, считаем что не подписан
+        }
+        
+        const response = await fetch(
+            `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${chatId}&user_id=${userId}`,
+            {
+                timeout: 10000 // 10 секунд таймаут
+            }
+        );
+        
+        if (!response.ok) {
+            console.warn(`Ошибка HTTP для канала ${channel.name}: ${response.status}`);
+            return false;
+        }
+        
+        const data = await response.json();
+        
+        if (!data.ok) {
+            console.warn(`Ошибка API для канала ${channel.name}: ${data.description}`);
+            return false;
+        }
+        
+        const isSubscribed = ['member', 'administrator', 'creator', 'restricted'].includes(data.result.status);
+        console.log(`Проверка канала ${channel.name}: ${isSubscribed ? 'подписан' : 'не подписан'}`);
+        return isSubscribed;
+        
+    } catch (error) {
+        console.error(`Ошибка проверки подписки для ${channel.name}:`, error);
+        return false; // При ошибке считаем что не подписан
+    }
+}
+
+// Проверка подписки на все каналы
 async function checkChannelSubscription(userId) {
     if (!userId) return [...CONFIG.SUBSCRIPTION_CHANNELS];
     
     const unsubscribed = [];
     
     try {
-        // Для каждого канала пытаемся проверить подписку
+        // Проверяем каждый канал последовательно
         for (const channel of CONFIG.SUBSCRIPTION_CHANNELS) {
-            const chatId = getChatIdFromLink(channel.username);
+            const isSubscribed = await checkSingleChannelSubscription(userId, channel);
             
-            if (!chatId) {
-                unsubscribed.push(channel);
-                continue;
-            }
-            
-            try {
-                // Пробуем через Bot API
-                const response = await fetch(
-                    `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${chatId}&user_id=${userId}`
-                );
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Проверяем ответ
-                if (!data.ok) {
-                    // Если бот не может получить информацию (не админ в приватном канале)
-                    // или канал не найден, считаем что пользователь не подписан
-                    console.warn(`Не удалось проверить подписку для ${channel.name}:`, data.description);
-                    unsubscribed.push(channel);
-                    continue;
-                }
-                
-                const isSubscribed = ['member', 'administrator', 'creator'].includes(data.result.status);
-                
-                if (!isSubscribed) {
-                    unsubscribed.push(channel);
-                }
-                
-            } catch (apiError) {
-                console.error(`Ошибка API для ${channel.name}:`, apiError);
-                // При ошибке API считаем что пользователь не подписан
+            if (!isSubscribed) {
                 unsubscribed.push(channel);
             }
+            
+            // Небольшая пауза между запросами
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         
         unsubscribedChannels = unsubscribed;
@@ -189,7 +258,7 @@ function showSubscriptionScreen(unsubscribed) {
                 <div class="channel-name">${channel.name}</div>
                 <div class="channel-description">${channel.description || ''}</div>
             </div>
-            <button onclick="tg.openTelegramLink('${channel.username}')">
+            <button onclick="openChannel('${channel.username}')">
                 Подписаться
             </button>
         </div>
@@ -213,18 +282,23 @@ function showSubscriptionScreen(unsubscribed) {
     `;
 }
 
+// Открыть канал
+function openChannel(url) {
+    tg.openTelegramLink(url);
+}
+
 // Подписаться на все неподписанные каналы
 function subscribeToAll() {
     if (unsubscribedChannels.length === 0) return;
     
-    // Открываем каналы по одному
-    unsubscribedChannels.forEach(channel => {
+    // Открываем каналы с задержкой
+    unsubscribedChannels.forEach((channel, index) => {
         setTimeout(() => {
             tg.openTelegramLink(channel.username);
-        }, 100);
+        }, index * 300); // Задержка 300мс между открытием каналов
     });
     
-    tg.showAlert(`Открыто ${unsubscribedChannels.length} канал(ов) для подписки. Пожалуйста, подпишитесь на каждый из них.`);
+    tg.showAlert(`Открыто ${unsubscribedChannels.length} канал(ов) для подписки. После подписки нажмите "Я подписался, проверить".`);
 }
 
 // Перепроверка подписки

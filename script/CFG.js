@@ -11,7 +11,7 @@ const CONFIG = {
     SUBSCRIPTION_CHANNELS: [
         {
             name: "@simpledlc",
-            username: "+MyUkrVP_q5E3YzM6",
+            username: "SimpleDLC",
             description: "Основной канал с играми",
         },
          {

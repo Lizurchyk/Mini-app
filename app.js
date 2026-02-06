@@ -26,7 +26,7 @@ function initLogo() {
     
     // Клик по логотипу - открывает заданный канал
     logo.onclick = function() {
-        tg.openTelegramLink(CONFIG.MAIN_CHANNEL.username);
+        tg.openTelegramLink(`https://t.me/${CONFIG.MAIN_CHANNEL.username}`);
     };
 }
 
@@ -78,49 +78,91 @@ function updateUserStatus(isPremium) {
     }
 }
 
-// Получение имени пользователя или ID из ссылки
-function getChannelIdentifier(channelLink) {
-    if (!channelLink) return '';
+// Получение chat_id из ссылки для Bot API
+function getChatIdFromLink(link) {
+    if (!link) return null;
     
-    // Если ссылка уже содержит @ или цифры, извлекаем часть после t.me/
-    if (channelLink.includes('t.me/')) {
-        const parts = channelLink.split('t.me/');
-        if (parts.length > 1) {
-            // Удаляем возможные параметры и символ +
-            return parts[1].split('?')[0].replace('+', '');
-        }
+    // Извлекаем часть после t.me/
+    const url = new URL(link);
+    const path = url.pathname;
+    
+    if (path.startsWith('/+')) {
+        // Для приватных каналов вида t.me/+MyUkrVP_q5E3YzM6
+        // Бот должен быть администратором в канале
+        const inviteCode = path.substring(2); // Убираем /+
+        // Для проверки подписки на приватные каналы бот должен быть админом
+        // и мы используем chat_id канала (если известен)
+        // Временно возвращаем invite code для попытки
+        return inviteCode;
+    } else if (path.startsWith('/@')) {
+        // Для публичных каналов вида t.me/@username
+        const username = path.substring(2); // Убираем /@
+        return `@${username}`;
+    } else if (path.startsWith('/')) {
+        // Для коротких ссылок вида t.me/username
+        const username = path.substring(1); // Убираем /
+        return `@${username}`;
     }
     
-    // Если это уже готовый идентификатор, возвращаем как есть
-    return channelLink;
+    return null;
 }
 
-// Проверка подписки на каналы (возвращает массив неподписанных каналов)
+// Упрощенная проверка подписки (через открытие ссылок)
 async function checkChannelSubscription(userId) {
-    if (!userId) return [];
+    if (!userId) return [...CONFIG.SUBSCRIPTION_CHANNELS];
     
     const unsubscribed = [];
     
     try {
+        // Для каждого канала пытаемся проверить подписку
         for (const channel of CONFIG.SUBSCRIPTION_CHANNELS) {
-            const channelIdentifier = getChannelIdentifier(channel.username);
-            const response = await fetch(
-                `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${channelIdentifier}&user_id=${userId}`
-            );
-            const data = await response.json();
+            const chatId = getChatIdFromLink(channel.username);
             
-            const isSubscribed = data.ok && 
-                ['member', 'administrator', 'creator'].includes(data.result.status);
+            if (!chatId) {
+                unsubscribed.push(channel);
+                continue;
+            }
             
-            if (!isSubscribed) {
+            try {
+                // Пробуем через Bot API
+                const response = await fetch(
+                    `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${chatId}&user_id=${userId}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Проверяем ответ
+                if (!data.ok) {
+                    // Если бот не может получить информацию (не админ в приватном канале)
+                    // или канал не найден, считаем что пользователь не подписан
+                    console.warn(`Не удалось проверить подписку для ${channel.name}:`, data.description);
+                    unsubscribed.push(channel);
+                    continue;
+                }
+                
+                const isSubscribed = ['member', 'administrator', 'creator'].includes(data.result.status);
+                
+                if (!isSubscribed) {
+                    unsubscribed.push(channel);
+                }
+                
+            } catch (apiError) {
+                console.error(`Ошибка API для ${channel.name}:`, apiError);
+                // При ошибке API считаем что пользователь не подписан
                 unsubscribed.push(channel);
             }
         }
+        
         unsubscribedChannels = unsubscribed;
         return unsubscribed;
+        
     } catch (error) {
-        console.error('Ошибка проверки подписки:', error);
-        // При ошибке показываем все каналы
+        console.error('Общая ошибка проверки подписки:', error);
+        // При общей ошибке показываем все каналы
         unsubscribedChannels = [...CONFIG.SUBSCRIPTION_CHANNELS];
         return unsubscribedChannels;
     }
@@ -143,7 +185,10 @@ function showSubscriptionScreen(unsubscribed) {
     
     const channelsList = unsubscribed.map(channel => `
         <div class="channel-item">
-            <a href="${channel.username}" target="_blank">${channel.name}</a>
+            <div class="channel-info">
+                <div class="channel-name">${channel.name}</div>
+                <div class="channel-description">${channel.description || ''}</div>
+            </div>
             <button onclick="tg.openTelegramLink('${channel.username}')">
                 Подписаться
             </button>
@@ -158,7 +203,7 @@ function showSubscriptionScreen(unsubscribed) {
                 ${channelsList}
             </div>
             <button class="subscribe-btn" onclick="subscribeToAll()">
-                📢 Подписаться на все (${unsubscribed.length})
+                📢 Открыть все каналы (${unsubscribed.length})
             </button>
             <br>
             <button class="check-btn" onclick="recheckSubscription()">
@@ -172,8 +217,11 @@ function showSubscriptionScreen(unsubscribed) {
 function subscribeToAll() {
     if (unsubscribedChannels.length === 0) return;
     
+    // Открываем каналы по одному
     unsubscribedChannels.forEach(channel => {
-        tg.openTelegramLink(channel.username);
+        setTimeout(() => {
+            tg.openTelegramLink(channel.username);
+        }, 100);
     });
     
     tg.showAlert(`Открыто ${unsubscribedChannels.length} канал(ов) для подписки. Пожалуйста, подпишитесь на каждый из них.`);

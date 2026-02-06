@@ -12,7 +12,7 @@ const CONFIG = {
         {
             name: "@simpledlc",
             username: "https://t.me/+MyUkrVP_q5E3YzM6",
-            chat_id: "-2412916680",
+            chat_id: "@SimpleDLC",
             description: "Основной канал с играми",
         },
          {

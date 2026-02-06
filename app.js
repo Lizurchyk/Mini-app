@@ -26,7 +26,7 @@ function initLogo() {
     
     // Клик по логотипу - открывает заданный канал
     logo.onclick = function() {
-        tg.openTelegramLink(`https://t.me/${CONFIG.MAIN_CHANNEL.username}`);
+        tg.openTelegramLink(CONFIG.MAIN_CHANNEL.username);
     };
 }
 
@@ -78,6 +78,23 @@ function updateUserStatus(isPremium) {
     }
 }
 
+// Получение имени пользователя или ID из ссылки
+function getChannelIdentifier(channelLink) {
+    if (!channelLink) return '';
+    
+    // Если ссылка уже содержит @ или цифры, извлекаем часть после t.me/
+    if (channelLink.includes('t.me/')) {
+        const parts = channelLink.split('t.me/');
+        if (parts.length > 1) {
+            // Удаляем возможные параметры и символ +
+            return parts[1].split('?')[0].replace('+', '');
+        }
+    }
+    
+    // Если это уже готовый идентификатор, возвращаем как есть
+    return channelLink;
+}
+
 // Проверка подписки на каналы (возвращает массив неподписанных каналов)
 async function checkChannelSubscription(userId) {
     if (!userId) return [];
@@ -86,8 +103,9 @@ async function checkChannelSubscription(userId) {
     
     try {
         for (const channel of CONFIG.SUBSCRIPTION_CHANNELS) {
+            const channelIdentifier = getChannelIdentifier(channel.username);
             const response = await fetch(
-                `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${channel.name}&user_id=${userId}`
+                `https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/getChatMember?chat_id=${channelIdentifier}&user_id=${userId}`
             );
             const data = await response.json();
             
@@ -125,8 +143,8 @@ function showSubscriptionScreen(unsubscribed) {
     
     const channelsList = unsubscribed.map(channel => `
         <div class="channel-item">
-            <a href="https://t.me/${channel.username}" target="_blank">${channel.name}</a>
-            <button onclick="tg.openTelegramLink('https://t.me/${channel.username}')">
+            <a href="${channel.username}" target="_blank">${channel.name}</a>
+            <button onclick="tg.openTelegramLink('${channel.username}')">
                 Подписаться
             </button>
         </div>
@@ -155,7 +173,7 @@ function subscribeToAll() {
     if (unsubscribedChannels.length === 0) return;
     
     unsubscribedChannels.forEach(channel => {
-        tg.openTelegramLink(`https://t.me/${channel.username}`);
+        tg.openTelegramLink(channel.username);
     });
     
     tg.showAlert(`Открыто ${unsubscribedChannels.length} канал(ов) для подписки. Пожалуйста, подпишитесь на каждый из них.`);

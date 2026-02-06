@@ -11,13 +11,13 @@ const CONFIG = {
     SUBSCRIPTION_CHANNELS: [
         {
             name: "@simpledlc",
-            username: "https://t.me/SimpleDLC",
+            username: "https://t.me/+MyUkrVP_q5E3YzM6",
             description: "Основной канал с играми",
         },
          {
             name: "@ApkNeetMod",
             username: "https://t.me/ApkNeetMod",
-            description: "Спонсор",
+            description: "",
         },
  
     ],

@@ -159,7 +159,7 @@ function showSubscriptionScreen(unsubscribed) {
     
     // Создаем список каналов
     const channelsList = unsubscribed.map(channel => {
-        const hasChatId = channel.chat_id ? '✅ Проверяется' : '⚠️ Не проверяется';
+        const hasChatId = channel.chat_id ? '' : '';
         return `
         <div class="channel-item">
             <div class="channel-info">

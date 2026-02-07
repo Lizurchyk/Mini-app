@@ -69,7 +69,7 @@ const CONFIG = {
             version: "3.2F1",
             img: "https://androidprog.com/wp-content/uploads/2023/04/standleo.webp",
             link: {
-                user: "https://go.linkify.ru/2FQb",
+                user: "https://go.linkify.ru/2G06",
                 premium: "https://mega.nz/file/Pck3XBwA#FuVA1VRb8UF6Bmd07TTPY_f1FHBHXIW1jlg2bzqsu4o"
             }
         },

@@ -15,12 +15,8 @@ const CONFIG = {
             chat_id: "@SimpleDLC",
             description: "Основной канал с играми",
         },
-         {
-            name: "Спонсор",
-            username: "https://t.me/ApkNeetMod",
-            chat_id: "@ApkNeetMod",
-            description: "",
-        },
+
+        
  
     ],
     

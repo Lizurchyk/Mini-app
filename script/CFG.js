@@ -15,6 +15,12 @@ const CONFIG = {
             chat_id: "@SimpleDLC",
             description: "Основной канал с играми",
         },
+        {
+            name: "Спонсор",
+            username: "https://t.me/TITAN_APK",
+            chat_id: "@TITAN_APK",
+            description: "",
+        },
 
         
  

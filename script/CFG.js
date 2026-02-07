@@ -16,8 +16,8 @@ const CONFIG = {
             description: "Основной канал с играми",
         },
         {
-            name: "Спонсор 1",
-            username: "https://t.me/titan_apk",
+            name: "Спонсор",
+            username: "https://t.me/+ug67VbsO99xlOWI6",
             chat_id: "@TITAN_APK",
             description: "",
         },

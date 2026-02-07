@@ -17,7 +17,7 @@ const CONFIG = {
         },
         {
             name: "Спонсор",
-            username: "https://t.me/TITAN_APK",
+            username: "https://t.me/+ug67VbsO99xlOWI6",
             chat_id: "@TITAN_APK",
             description: "",
         },

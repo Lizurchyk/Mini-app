@@ -37,7 +37,7 @@ const CONFIG = {
         }
     },
     
-    // Игры (без поля price)
+    // Игры (без поля price) 
     GAMES: [
       {
             name: "[Mod] StandChillow V3",
@@ -47,6 +47,16 @@ const CONFIG = {
             link: {
                 user: "https://go.linkify.ru/2FxS",
                 premium: "https://mega.nz/file/DFUgiSRD#NjbBtENjys-Dzejg2uZnITWHInzCvgq4joaZA8r0ilI"
+            }
+        },
+      {
+            name: "[Script] Standoff",
+            description: "Функции:\n • No recoil\n • Anti Grenade\n • Fov\n • Chams",
+            version: "0.37.0",
+            img: "https://i.ytimg.com/vi/PET3rLiRPD8/mqdefault.jpg",
+            link: {
+                user: "https://go.linkify.ru/2G2P",
+                premium: "https://mega.nz/file/yNkTXAwY#BlnGfG8S2GDi0S3XRBp2vMdX4jIgfDsxKxM_Gy-jcUE"
             }
         },
         {

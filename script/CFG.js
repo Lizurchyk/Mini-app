@@ -15,12 +15,6 @@ const CONFIG = {
             chat_id: "@SimpleDLC",
             description: "Основной канал с играми",
         },
-        {
-            name: "Читы от Chitak APK",
-            username: "https://t.me/+ug67VbsO99xlOWI6",
-            chat_id: "@Chitak_apk",
-            description: "",
-        },
  
  
     ],

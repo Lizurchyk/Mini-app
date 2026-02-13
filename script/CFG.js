@@ -82,26 +82,6 @@ const CONFIG = {
                 premium: "https://mega.nz/file/Pck3XBwA#FuVA1VRb8UF6Bmd07TTPY_f1FHBHXIW1jlg2bzqsu4o"
             }
         },
-        {
-            name: "[Mod] StandLeo Lite",
-            description: "Функции: \n• Вх \n• Анти гранаты \n• Нет отдачи \n• И многое другое...",
-            version: "1.2",
-            img: "https://online-games-free.ru/wp-content/uploads/2025/10/standleo-lite.jpg",
-            link: {
-                user: "https://go.linkify.ru/2FAH",
-                premium: "https://mega.nz/file/aUMn0ZyA#GTQ7Mjqizgg6pfE1U2MhGSQ7Y3V2LMFU8aPUJu3n118"
-            }
-        },
-      {
-            name: "[Mod] StandLeo",
-            description: "Функции: \n• Аим \n• Анти гранаты \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...\n\n\nКлюч: t.me/SimpleDLC",
-            version: "3.1",
-            img: "https://androidprog.com/wp-content/uploads/2023/04/standleo.webp",
-            link: {
-                user: "https://go.linkify.ru/2Ei1",
-                premium: "https://www.mediafire.com/file/1eh3v8colgke34s/%25D0%2590%25D0%259F%25D0%259A_%25D0%25A7%25D0%2598%25D0%25A2_STANDLEO_3.1.zip/file"
-            }
-        },
       {
             name: "[Mod] Polywar",
             description: "Функции: \n• Режим бога \n• Анти гранаты \n• Бесконечные патроны \n• Быстрая стрельба \n• Нет отдачи \n• И многое другое...",
@@ -113,27 +93,6 @@ const CONFIG = {
             }
         },
       {
-            name: "[Mod] StandLeo Classic",
-            description: "Функции: \n• Мини аим \n• Анти гранаты \n• Бесконечные патроны \n• Вх \n• Радар хак",
-            version: "1.0",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVOvuvVFtmo-FyD27MbNLryfVx0DP1JYMWruh2LISBjCHywxjH9BQlfF0&s=10",
-            link: {
-                user: "https://go.linkify.ru/2FDd",
-                premium: "https://mega.nz/file/2EkDXCLR#2BhYutXnvRAlOJgoo3DyCcL4SH2qmpcdXhR4XcTZRJY"
-            }
-        },
-      {
-            name: "[Script] StandLeo Classic",
-            description: "Функции: \n• Аим \n• Аим в2 \n• Анти гранаты \n• Бесконечные патроны \n• Нет отдачи \n• Радар хак \n• И другое ...",
-            version: "1.0",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVOvuvVFtmo-FyD27MbNLryfVx0DP1JYMWruh2LISBjCHywxjH9BQlfF0&s=10",
-            link: {
-                user: "https://go.linkify.ru/2FFj",
-                premium: "https://mega.nz/file/aYEkiZDD#7QNPBsI3v83sP96ZAC-gVipKRfsTsqqjX9SjeaUyBAA"
-            }
-        },
-
-      {
             name: "[Script] Car parking multiplayer",
             description: "Функции: \n• Накрутка денег \n• Накрутка монет \n• Накрутка статистики \n• И другое ...",
             version: "4.9.7",
@@ -141,16 +100,6 @@ const CONFIG = {
             link: {
                 user: "https://go.linkify.ru/2FzI",
                 premium: "https://mega.nz/file/PE1D1TAR#-XzISLpcrpc5liHz9aQtZKhLEOBRea0HVzi23A7iYio"
-            }
-        },
-     {
-            name: "[Mod] Subway Surf",
-            description: "Функции: \n• Бессмертие \n• Накрутка ключей \n• Накрутка монет \n• Открыть персонажей \n• И другое ...",
-            version: "3.57.1",
-            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOYw9tYEYf4QC8Ge-zewYxrHDSkdxa8pZR_5Ea8O5W0Q&s=10",
-            link: {
-                user: "https://go.linkify.ru/2Fnb",
-                premium: "https://mega.nz/file/TUU0AQbK#FwJkVqhngSA7gSZHGSB9cy7Vm1HDS20bMlNfoVKi-1M"
             }
         },
 {
